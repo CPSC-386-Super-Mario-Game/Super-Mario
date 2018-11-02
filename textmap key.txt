@@ -1,0 +1,20 @@
+Open textmaps in notepad and stretch it out lengthwise and turn off word wrapping to see the map in full.
+
+Each character meaning:
+. = empty space
+m = mario
+b = normal block
+B = normal underworld block
+1-9 = block with this many coins in it
+l = block with life-up
+p = block with power-up
+S = block with starman
+x = ground tile
+X = underworld tile
+g = goomba
+k = koopa
+w = warp pipe
+s = solid block
+c = coin
+C = castle
+f = goal flag

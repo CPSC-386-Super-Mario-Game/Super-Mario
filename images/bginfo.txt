@@ -1,0 +1,6 @@
+First pipe is on 29th block.
+2nd Pipe is on 9th block after that.
+3rd Pipe is on 7th block after that.
+4th Pipe is on 10th block after that.
+End of first platform is on 11th block after that (10 blocks, then space)
+
