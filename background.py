@@ -17,5 +17,5 @@ class Background:
         self.screen.blit(self.image, self.rect)
 
     def update(self):
-        self.x -= self.dx                                   # Use dummy variable for decimal Rects to work with Pygame
+        #self.x -= self.dx                                   # Use dummy variable for decimal Rects to work with Pygame
         self.rect.x = self.x

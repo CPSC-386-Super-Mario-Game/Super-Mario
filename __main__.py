@@ -35,6 +35,7 @@ class main:
                 self.gF.check_events()
                 self.background.update()
                 self.background.blit()
+                self.map.blitme()  # Alternate loading
                 pygame.display.flip()
 
                 self.clock.tick(self.settings.FPS)                                        # Locks game at designated FPS
