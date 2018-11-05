@@ -1,5 +1,5 @@
 import background as b
-import gameFunctions as gF
+from gameFunctions import GameFunctions
 import os
 import pygame
 import settings as s
@@ -7,32 +7,39 @@ import map as m
 import time
 
 
-def main():
-    #   Provides consistent window positioning.
-    os.environ['SDL_VIDEO_WINDOW_POS'] = '60, 35'
-    pygame.init()
-    pygame.mouse.set_visible(False)
-    clock = pygame.time.Clock()                                         # Used for FPS + time-tracking
+class main:
+    def __init__(self):
 
-    #   Initial set-up
-    settings = s.Settings()
-    pygame.display.set_caption(settings.gameTitle)
-    screen = pygame.display.set_mode((settings.screenWidth, settings.screenHeight))
-    screen.fill(settings.bgColor)
+        #   Provides consistent window positioning.
+        os.environ['SDL_VIDEO_WINDOW_POS'] = '60, 35'
+        pygame.init()
+        #pygame.mouse.set_visible(False)
+        self.clock = pygame.time.Clock()                                         # Used for FPS + time-tracking
 
-    #   Generate game objects
-    image_library = gF.load_image_library()
-    background = b.Background(image_library, screen, settings)
-    map = m.Map(image_library, screen, settings)
+        #   Initial set-up
+        self.settings = s.Settings()
+        pygame.display.set_caption(self.settings.gameTitle)
+        self.screen = pygame.display.set_mode((self.settings.screenWidth, self.settings.screenHeight))
+        self.screen.fill(self.settings.bgColor)
+        self.gF = GameFunctions(finished = False)
+
+        #   Generate game objects
+        self.image_library = self.gF.load_image_library()
+        self.background = b.Background(self.image_library, self.screen, self.settings)
+        self.map = m.Map(self.image_library, self.screen, self.settings)
 
     #   Game loop
-    while True:
-        background.update()
-        background.blit()
-        pygame.display.flip()
+    def play(self):
+        while True:
+            while not self.gF.finished:
+                self.gF.check_events()
+                self.background.update()
+                self.background.blit()
+                pygame.display.flip()
 
-        clock.tick(settings.FPS)                                        # Locks game at designated FPS
+                self.clock.tick(self.settings.FPS)                                        # Locks game at designated FPS
 
 
 if __name__ == '__main__':
-    main()
+    game = main()
+    game.play()

@@ -17,6 +17,10 @@ class Map:
         self.rect.x = 0
         self.rect.y = settings.topOfGame
 
+        self.mario_image = self.image_library[2].convert_alpha()
+        self.mario_image = pygame.transform.scale(self.mario_image, (settings.tileSize, settings.tileSize))
+        self.mario_rect = self.mario_image.get_rect()                               # Mario's x y position is not set
+
         self.parse_file()
         self.print_map()                                                            # For testing + debugging
 
@@ -38,6 +42,9 @@ class Map:
                     elif flag == "x":
                         map_row.append(copy.copy())
                         copy.left = copy.right
+                    elif flag == "m":                                               # WIP, set Mario x y position here
+                        self.mario_rect.x = 50
+                        self.mario_rect.y = 50
                     else:
                         copy.left = copy.right
                         map_row.append(flag)
