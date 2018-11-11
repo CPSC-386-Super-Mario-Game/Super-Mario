@@ -12,3 +12,5 @@ class Settings:
 
         #   Block Settings
         self.tileSize = 56
+
+        #   Mario Settings
