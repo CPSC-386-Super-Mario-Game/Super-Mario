@@ -1,3 +1,6 @@
+import pygame
+
+
 class Background:
     def __init__(self, image_library, screen, settings):
         self.screen = screen
@@ -14,9 +17,20 @@ class Background:
         self.y = self.rect.y
         self.dx = 1
 
+        self.ugimage = pygame.Surface(screen.get_size())
+        self.ugimage.fill((0, 0, 0))
+
+        # Frame of Reference
+        self.floor_begin = 0
+        self.floor_end = 20
+
     def blit(self):
         self.screen.blit(self.image, self.rect)
 
-    def update(self):
-        # self.x -= self.dx                                  # Use dummy variable for decimal Rects to work with Pygame
+    def ugblit(self):
+        self.screen.blit(self.ugimage, self.rect)
+
+    def update(self, x_value):
+        self.x = self.rect.x
+        self.x -= x_value
         self.rect.x = self.x

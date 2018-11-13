@@ -32,12 +32,39 @@ class Mario:
         self.rect.x = self.x
         self.rect.y = self.y
 
+    def update_x(self, background, floor_rects):
+        self.vector.update_x_velocity(self.x_direction)
+        if self.rect.x >= self.settings.screenWidth / 2 and self.vector.x_velocity > 0:
+            popme = "none"
+            for index, rect in enumerate(floor_rects):
+                x = rect.x
+                x -= self.vector.x_velocity
+                rect.x = x
+                if rect.right < 0:
+                    popme = index
+            if popme != "none":
+                floor_rects.pop(popme)
+
+            dx = background.x
+            background.update(self.vector.x_velocity)
+            dy = background.x
+
+        else:
+            self.x += self.vector.x_velocity
+            self.rect.x = self.x
+        return background
+
+    def update_y(self):
+        self.vector.update_y_velocity(self.jumpFlag)
+        self.y += self.vector.y_velocity
+        self.rect.y = self.y
+
     def change_direction(self, direction):
         self.x_direction = direction
         self.vector.change_direction(direction)
 
     def jump(self):
-        if self.jumpFlag == "jumping":
+        if self.jumpFlag == "jumping" or self.jumpFlag == "falling":
             return
         else:
             self.jumpFlag = "jumping"

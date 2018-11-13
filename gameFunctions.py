@@ -1,6 +1,9 @@
 import pygame
 import sys
 import brick
+import pipe
+import coin
+from goomba import Goomba
 
 
 class GameFunctions:
@@ -10,21 +13,132 @@ class GameFunctions:
 
         self.dt = 0
         self.block_timer = 1
+        self.goomba_timer = 2
+        self.coin_timer = 1
 
-    def check_time(self, blocks):
+        self.overworld_flag = False
+
+    def check_time(self, blocks, goombas, coins):
         self.block_timer -= self.dt
         if self.block_timer < 0:
             self.block_timer = 1
             for block in blocks:
                 block.change_index()
+
+        self.goomba_timer -= self.dt
+        if self.goomba_timer < 0:
+            self.goomba_timer = 2
+            for goomba in goombas:
+                goomba.flip_img()
+
+        self.coin_timer -= self.dt
+        if self.coin_timer < 0:
+            self.coin_timer = 1
+            for coin in coins:
+                coin.change_index()
+
         self.dt = self.timer.tick(144) / 144
 
     @staticmethod
-    def blit_objects(bricks, blocks):
+    def check_bottom_collisions(begin, blocks, bricks, end, floor, mario):
+        index = mario.rect.collidelist(blocks)
+        if index == -1:
+            pass
+        elif mario.rect.y - blocks[index].rect.y > 0:
+            if mario.rect.right - blocks[index].rect.left < 20:
+                mario.rect.right = blocks[index].rect.left
+                mario.rect.top = blocks[index].rect.bottom
+                return
+            elif mario.rect.left - blocks[index].rect.right > -20:
+                mario.rect.left = blocks[index].rect.right
+                return
+            mario.rect.top = blocks[index].rect.bottom
+            mario.vector.y_velocity = 1.5
+            mario.jumpFlag = "falling"
+            return
+        elif mario.vector.y_velocity >= 0:
+            mario.vector.y_velocity = 0
+            mario.rect.bottom = blocks[index].rect.top
+            mario.jumpFlag = "None"
+            return
+
+        if mario.vector.y_velocity >= 0:
+            index = mario.rect.collidelist(floor[begin:end])
+            if index == -1:
+                mario.jumpFlag = "falling"
+            else:
+                mario.rect.bottom = floor[index].top
+                mario.vector.y_velocity = 0
+                mario.jumpFlag = "None"
+                return
+
+        index = mario.rect.collidelist(bricks)
+        if index == -1:
+            pass
+        elif mario.vector.y_velocity < 0:
+            mario.rect.top = bricks[index].rect.bottom + 7
+            mario.vector.y_velocity = 1.5
+            mario.jumpFlag = "falling"
+            return
+        else:
+            mario.vector.y_velocity = 0
+            mario.rect.bottom = bricks[index].rect.top - 1
+            mario.jumpFlag = "None"
+            return
+
+    @staticmethod
+    def check_left_collisions(blocks, bricks, mario):
+        index = mario.rect.collidelist(blocks)
+        if index == -1:
+            pass
+        elif mario.rect.x - blocks[index].rect.x < 0:
+            mario.rect.right = blocks[index].rect.left - 1
+            mario.vector.x_velocity = 0
+        else:
+            mario.rect.left = blocks[index].rect.right + 1
+            mario.vector.x_velocity = 0
+
+        index = mario.rect.collidelist(bricks)
+        if index == -1:
+            pass
+        elif mario.rect.x - bricks[index].rect.x < 0:
+            mario.rect.right = bricks[index].rect.left
+            mario.vector.x_velocity = 0
+        else:
+            mario.rect.left = bricks[index].rect.right
+            mario.vector.x_velocity = 0
+
+    @staticmethod
+    def blit_objects(bricks, blocks, goombas):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
             obj.blit()
+        for obj in goombas:
+            obj.update()
+            obj.blitme()
+
+    @staticmethod
+    def update_mario(background, blocks, bricks, floor, mario):
+        background = mario.update_x(background, floor)
+        GameFunctions.check_left_collisions(blocks, bricks, mario)
+        mario.update_y()
+        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
+        return background
+
+    @staticmethod
+    def blit_ugobjects(bricks, blocks, leftpipes, hugepipes, coins):
+        for obj in bricks:
+            obj.blit()
+        for obj in blocks:
+            obj.blit()
+        for obj in hugepipes:
+            obj.blit()
+        for obj in leftpipes:
+            obj.blit()
+        for obj in coins:
+            obj.blit()
+
 
     @staticmethod
     def check_events(mario):
@@ -67,12 +181,52 @@ class GameFunctions:
         return brick_list
 
     @staticmethod
+    def load_ugfloor_objects(image_library, rect_list, screen, settings):
+        floor_list = []
+        for rect in rect_list:
+            new_floor = brick.Floor(image_library, rect, screen, settings)
+            floor_list.append(new_floor)
+        return floor_list
+
+    @staticmethod
     def load_block_objects(image_library, rect_list, screen, settings):
         block_list = []
         for rect in rect_list:
             new_block = brick.MysteryBrick(image_library, rect, screen, settings)
             block_list.append(new_block)
         return block_list
+
+    @staticmethod
+    def load_goomba_objects(image_library, rect_list, screen, settings):
+        goomba_list = []
+        for rect in rect_list:
+            new_goomba = Goomba(screen, settings, rect, image_library)
+            goomba_list.append(new_goomba)
+        return goomba_list
+
+    @staticmethod
+    def load_leftpipe_obj(image_library, rect_list, screen, settings):
+        leftpipe_list = []
+        for rect in rect_list:
+            new_leftpipe = pipe.LeftPipe(image_library, rect, screen, settings)
+            leftpipe_list.append(new_leftpipe)
+        return leftpipe_list
+
+    @staticmethod
+    def load_hugepipe_obj(image_library, rect_list, screen, settings):
+        hugepipe_list = []
+        for rect in rect_list:
+            new_hugepipe = pipe.HugePipe(image_library, rect, screen, settings)
+            hugepipe_list.append(new_hugepipe)
+        return hugepipe_list
+
+    @staticmethod
+    def load_coin_objs(image_library, rect_list, screen, settings):
+        coin_list = []
+        for rect in rect_list:
+            new_coin = coin.Coin(image_library, rect, screen, settings)
+            coin_list.append(new_coin)
+        return coin_list
 
     @staticmethod
     def load_image_library():
@@ -98,9 +252,13 @@ class GameFunctions:
 
         coin_lib = [pygame.image.load('images/fg/coin0.png'), pygame.image.load('images/fg/coin1.png'),
                     pygame.image.load('images/fg/coin2.png'), pygame.image.load('images/fg/coin3.png')]
+        for index, img in enumerate(coin_lib):
+            coin_lib[index] = pygame.transform.scale(img, (28, 56))
 
         floor_lib = [pygame.image.load('images/fg/ug_brick.png'), pygame.image.load('images/fg/ug_floor.png'),
                      pygame.image.load('images/fg/tile.png'), pygame.image.load('images/fg/floor.png')]
+        for index, img in enumerate(floor_lib):
+            floor_lib[index] = pygame.transform.scale(img, (56, 56))
 
         star_lib = [pygame.image.load('images/fg/star0.png'), pygame.image.load('images/fg/star1.png'),
                     pygame.image.load('images/fg/star2.png'), pygame.image.load('images/fg/star3.png')]
@@ -111,7 +269,10 @@ class GameFunctions:
         pipes_lib = [pygame.image.load('images/fg/small_pipe_up.png'),
                      pygame.image.load('images/fg/medium_pipe_up.png'),
                      pygame.image.load('images/fg/large_pipe_up.png'),
-                     pygame.image.load('images/fg/largest_pipe_up.png')]
+                     pygame.image.load('images/fg/largest_pipe_up.png'),
+                     pygame.image.load('images/fg/pipe_left.png')]
+        pipes_lib[4] = pygame.transform.scale(pipes_lib[4], (162, 112))
+        pipes_lib[3] = pygame.transform.scale(pipes_lib[3], (112, 616))
 
         big_lib = [pygame.image.load('images/mario/big_idle.png'), pygame.image.load('images/mario/big_turn.png'),
                    pygame.image.load('images/mario/big_jump.png'), pygame.image.load('images/mario/big_walk0.png'),
