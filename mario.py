@@ -2,9 +2,10 @@ import vector
 
 
 class Mario:
-    def __init__(self, image_lib, screen, settings, x, y):
+    def __init__(self, image_lib, screen, settings, x, y, sound_library):
         self.screen = screen
         self.settings = settings
+        self.sound_library = sound_library
         self.original_x = x
         self.original_y = y
         self.vector = vector.Vector(settings)
@@ -85,6 +86,7 @@ class Mario:
             return
         else:
             self.jumpFlag = "jumping"
+            self.sound_library[1][9].play()
             self.vector.jump()
 
     def blit(self):
@@ -92,15 +94,15 @@ class Mario:
 
 
 class SmallMario(Mario):
-    def __init__(self, image_lib, screen, settings, x, y):
-        super().__init__(image_lib, screen, settings, x, y)
+    def __init__(self, image_lib, screen, settings, x, y,  sound_library):
+        super().__init__(image_lib, screen, settings, x, y,  sound_library)
 
 
 class BigMario(Mario):
-    def __init__(self, image_lib, screen, settings, x, y):
-        super().__init__(image_lib, screen, settings, x, y)
+    def __init__(self, image_lib, screen, settings, x, y,  sound_library):
+        super().__init__(image_lib, screen, settings, x, y,  sound_library)
 
 
 class FireMario(BigMario):
-    def __init__(self, image_lib, screen, settings, x, y):
-        super().__init__(image_lib, screen, settings, x, y)
+    def __init__(self, image_lib, screen, settings, x, y, sound_library):
+        super().__init__(image_lib, screen, settings, x, y, sound_library)

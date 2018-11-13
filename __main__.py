@@ -24,11 +24,12 @@ class Main:
 
         #   Generate game objects
         self.image_library = self.gF.load_image_library()
+        self.sound_library = self.gF.load_sound_library()
         self.background = b.Background(self.image_library, self.screen, self.settings)
         self.map = m.Map(self.image_library, self.screen, self.settings)
 
         self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen, self.settings,
-                                      self.map.mario_coor[0][0], self.map.mario_coor[0][1])
+                                      self.map.mario_coor[0][0], self.map.mario_coor[0][1], self.sound_library)
         self.bricks = self.gF.load_brick_objects(self.image_library[1], self.map.brick_rect, self.screen, self.settings)
         self.blocks = self.gF.load_block_objects(self.image_library[2], self.map.mystery_rect, self.screen,
                                                  self.settings)
@@ -55,6 +56,8 @@ class Main:
         self.ug_coins = self.gF.load_coin_objs(self.image_library[7], self.ugmap.coin_rect, self.screen, self.settings)
 
         self.i = 0
+
+        self.sound_library[0][0].play(-1)
 
     #   Game loop
     def play(self):
