@@ -33,7 +33,8 @@ class Mario:
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def update_x(self, background, floor_rects, brick_rects, block_rects, solid_rects, smallpipe_rects, mediumpipe_rects, largepipe_rects, flag_rects, castle_rects, goomba_rects):
+    def update_x(self, background, floor_rects, brick_rects, block_rects, solid_rects, smallpipe_rects,
+                 mediumpipe_rects, largepipe_rects, flag_rects, castle_rects, goomba_rects, koopa_rects):
         self.vector.update_x_velocity(self.x_direction)
         if self.rect.x >= self.settings.screenWidth / 2 and self.vector.x_velocity > 0:
             popme = "none"
@@ -62,8 +63,6 @@ class Mario:
                 flag_rects[index].rect.x -= self.vector.x_velocity
             for index, rect in enumerate(castle_rects):
                 castle_rects[index].rect.x -= self.vector.x_velocity
-            for index, rect in enumerate(goomba_rects):
-                goomba_rects[index].rect.x -= self.vector.x_velocity
 
             dx = background.x
             background.update(self.vector.x_velocity)

@@ -71,6 +71,10 @@ class Map:
                         map_row.append(flag)
                         self.goomba_rect.append(copy.copy())
                         copy.left = copy.right
+                    elif flag == "k":
+                        map_row.append(flag)
+                        self.koopa_coor.append(copy.copy())
+                        copy.left = copy.right
                     elif flag == "s":
                         map_row.append(flag)
                         self.solid_rect.append(copy.copy())

@@ -5,6 +5,7 @@ import pipe
 import coin
 import miscellaneous
 from goomba import Goomba
+from koopa import Koopa
 
 
 class GameFunctions:
@@ -15,11 +16,12 @@ class GameFunctions:
         self.dt = 0
         self.block_timer = 1
         self.goomba_timer = 2
+        self.koopa_timer = 2
         self.coin_timer = 1
 
         self.overworld_flag = False
 
-    def check_time(self, blocks, goombas, coins):
+    def check_time(self, blocks, goombas, koopas, coins):
         self.block_timer -= self.dt
         if self.block_timer < 0:
             self.block_timer = 1
@@ -32,6 +34,12 @@ class GameFunctions:
             for goomba in goombas:
                 goomba.flip_img()
 
+        self.koopa_timer -= self.dt
+        if self.koopa_timer < 0:
+            self.koopa_timer = 2
+            for koopa in koopas:
+                koopa.walk_flip()
+
         self.coin_timer -= self.dt
         if self.coin_timer < 0:
             self.coin_timer = 1
@@ -41,7 +49,7 @@ class GameFunctions:
         self.dt = self.timer.tick(144) / 144
 
     @staticmethod
-    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, mario):
+    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario):
         ##BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -99,6 +107,18 @@ class GameFunctions:
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
             mario.jump()
+        ##KOOPAS
+        index = mario.rect.collidelist(koopas)
+        if index == -1:
+            pass
+        elif koopas[index].dead:
+             pass
+        elif mario.jumpFlag == "falling":
+            koopas[index].dead = True
+            goombas[index].rect.y -= 28
+            mario.vector.y_velocity = 0
+            mario.jumpFlag = "None"
+            mario.jump()
 
     @staticmethod
     def check_left_collisions(blocks, bricks, mario):
@@ -123,17 +143,21 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes, flags, castles):
+    def blit_objects(mario, bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags, castles):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
             obj.blit()
         for obj in goombas:
             obj.blitme()
-            if obj.update():
+            if obj.update(mario):
                 goombas.remove(obj)
                 print("dead goomba")
+        for obj in koopas:
             obj.blitme()
+            if obj.update(mario):
+                koopas.remove(obj)
+                print("dead koopa")
         for obj in solids:
             obj.blit()
         for obj in smallpipes:
@@ -146,12 +170,15 @@ class GameFunctions:
             obj.blit()
         for obj in castles:
             obj.blit()
+
     @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags, castles, goombas):
-        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes, flags, castles, goombas)
+    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags,
+                     castles, goombas, koopas):
+        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
+                                    flags, castles, goombas, koopas)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
-        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, mario)
+        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario)
         return background
 
     @staticmethod
@@ -279,6 +306,14 @@ class GameFunctions:
             new_goomba = Goomba(screen, settings, rect, image_library)
             goomba_list.append(new_goomba)
         return goomba_list
+
+    @staticmethod
+    def load_koopa_objects(image_library, rect_list, screen, settings):
+        koopa_list = []
+        for rect in rect_list:
+            new_koopa = Koopa(screen, settings, rect, image_library)
+            koopa_list.append(new_koopa)
+        return koopa_list
 
     @staticmethod
     def load_leftpipe_obj(image_library, rect_list, screen, settings):
@@ -440,6 +475,11 @@ class GameFunctions:
 
         koopa_lib = [pygame.image.load('images/enemies/koopa0.png'), pygame.image.load('images/enemies/koopa1.png'),
                      pygame.image.load('images/enemies/koopa_stand.png'), pygame.image.load('images/enemies/shell.png')]
+        for index, img in enumerate(koopa_lib):
+            if index == 0 or index == 1:
+                koopa_lib[index] = pygame.transform.scale(img, (56, 84))
+            else:
+                koopa_lib[index] = pygame.transform.scale(img, (56, 56))
 
         img_lib = [bg_lib, brick_lib, mystery_lib, flag_lib, mushroom_lib, one_up_lib, brick_coin_lib, coin_lib,
                    floor_lib, star_lib, flower_lib, pipes_lib, big_lib, big_invinc_lib, fire_lib, small_lib,

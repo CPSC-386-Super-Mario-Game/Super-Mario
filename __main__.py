@@ -35,6 +35,8 @@ class Main:
                                                  self.settings)
         self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
                                                    self.settings)
+        self.koopas = self.gF.load_koopa_objects(self.image_library[18], self.map.koopa_coor, self.screen,
+                                                 self.settings)
         self.floor_rects = self.map.floor_rects
         self.solid_rects = self.gF.load_solid_objects(self.image_library[8], self.map.solid_rect, self.screen, self.settings)
         self.smallpipe_rects = self.gF.load_smallpipe_obj(self.image_library[11], self.map.smallpipe_rect, self.screen, self.settings)
@@ -72,10 +74,15 @@ class Main:
             #                                   self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
             while not self.gF.finished:
                 self.gF.check_events(self.mario)
-
+                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
+                                                       self.mario, self.solid_rects, self.smallpipe_rects,
+                                                       self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
+                                                       self.castle_rects, self.goombas, self.koopas)
                 if not self.gF.overworld_flag:
                     self.background.blit()
-                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects, self.flag_rects, self.castle_rects)
+                    self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas, self.solid_rects, self.smallpipe_rects,
+                                         self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
+                                         self.castle_rects)
 
                 else:
                     self.background.ugblit()
@@ -89,11 +96,10 @@ class Main:
                     #     break
                     self.screen.blit(self.image_library[8][3], floor)
 
-                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects, self.flag_rects, self.castle_rects, self.goombas)
                 self.mario.blit()
                 pygame.display.flip()
 
-                self.gF.check_time(self.blocks, self.goombas, self.ug_coins)
+                self.gF.check_time(self.blocks, self.goombas, self.koopas, self.ug_coins)
                 self.clock.tick(self.settings.FPS)                                     # Locks game at designated FPS
 
 
