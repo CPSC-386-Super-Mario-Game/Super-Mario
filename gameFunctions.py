@@ -49,7 +49,7 @@ class GameFunctions:
         self.dt = self.timer.tick(144) / 144
 
     @staticmethod
-    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario):
+    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library):
         ##BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -115,6 +115,7 @@ class GameFunctions:
              pass
         elif mario.jumpFlag == "falling":
             koopas[index].dead = True
+            sound_library[1][10].play()
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
@@ -173,12 +174,12 @@ class GameFunctions:
 
     @staticmethod
     def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags,
-                     castles, goombas, koopas):
+                     castles, goombas, koopas, sound_library):
         background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
                                     flags, castles, goombas, koopas)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
-        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario)
+        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario, sound_library)
         return background
 
     @staticmethod
@@ -300,18 +301,18 @@ class GameFunctions:
         return castle_list
 
     @staticmethod
-    def load_goomba_objects(image_library, rect_list, screen, settings):
+    def load_goomba_objects(image_library, rect_list, screen, settings, sound_lib):
         goomba_list = []
         for rect in rect_list:
-            new_goomba = Goomba(screen, settings, rect, image_library)
+            new_goomba = Goomba(screen, settings, rect, image_library, sound_lib)
             goomba_list.append(new_goomba)
         return goomba_list
 
     @staticmethod
-    def load_koopa_objects(image_library, rect_list, screen, settings):
+    def load_koopa_objects(image_library, rect_list, screen, settings, sound_lib):
         koopa_list = []
         for rect in rect_list:
-            new_koopa = Koopa(screen, settings, rect, image_library)
+            new_koopa = Koopa(screen, settings, rect, image_library, sound_lib)
             koopa_list.append(new_koopa)
         return koopa_list
 

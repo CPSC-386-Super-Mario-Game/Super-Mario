@@ -34,9 +34,9 @@ class Main:
         self.blocks = self.gF.load_block_objects(self.image_library[2], self.map.mystery_rect, self.screen,
                                                  self.settings)
         self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
-                                                   self.settings)
+                                                   self.settings, self.sound_library)
         self.koopas = self.gF.load_koopa_objects(self.image_library[18], self.map.koopa_coor, self.screen,
-                                                 self.settings)
+                                                 self.settings, self.sound_library)
         self.floor_rects = self.map.floor_rects
         self.solid_rects = self.gF.load_solid_objects(self.image_library[8], self.map.solid_rect, self.screen, self.settings)
         self.smallpipe_rects = self.gF.load_smallpipe_obj(self.image_library[11], self.map.smallpipe_rect, self.screen, self.settings)
@@ -77,7 +77,7 @@ class Main:
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
                                                        self.mario, self.solid_rects, self.smallpipe_rects,
                                                        self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
-                                                       self.castle_rects, self.goombas, self.koopas)
+                                                       self.castle_rects, self.goombas, self.koopas, self.sound_library)
                 if not self.gF.overworld_flag:
                     self.background.blit()
                     self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas, self.solid_rects, self.smallpipe_rects,

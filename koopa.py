@@ -5,12 +5,13 @@ from map import Map
 
 
 class Koopa(Sprite):
-    def __init__(self,  screen, settings, rect, imglib):
+    def __init__(self,  screen, settings, rect, imglib, soundlib):
         super(Koopa, self).__init__()
         self.map = map
         self.screen = screen
         self.speed_factor = 1  # -1 left +1 right
         self.settings = settings
+        self.soundlib = soundlib
         self.lr = 0
         # self.y_mod = 200
         self.dead = False
@@ -49,6 +50,7 @@ class Koopa(Sprite):
             if self.dead_counter == 60:
                 return True
             elif self.dead_counter == 0:
+                #self.soundlib[1][10].play()
                 self.rect.y -= 28
             else:
                 self.dead_counter += 1

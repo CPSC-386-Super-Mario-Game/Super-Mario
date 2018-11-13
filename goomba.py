@@ -5,12 +5,13 @@ from map import Map
 
 
 class Goomba(Sprite):
-    def __init__(self,  screen, settings, rect, imglib):
+    def __init__(self,  screen, settings, rect, imglib, soundlib):
         super(Goomba, self).__init__()
         self.map = map
         self.screen = screen
         self.speed_factor = 1  # -1 left +1 right
         self.settings = settings
+        self.soundlib = soundlib
         # self.y_mod = 200
         self.dead = False
         self.dead_counter = 0
@@ -41,6 +42,8 @@ class Goomba(Sprite):
         if mario.rect.x >= self.settings.screenWidth / 2 and mario.vector.x_velocity > 0:
             self.center_x -= mario.vector.x_velocity
         if self.dead:
+            if self.dead_counter == 0:
+                self.soundlib[1][10].play()
             self.image = self.images[2]
             if self.dead_counter == 60:
                 return True
