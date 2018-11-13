@@ -292,6 +292,20 @@ class GameFunctions:
             coin_list.append(new_coin)
         return coin_list
 
+    def load_sound_library(self):
+        track_lib = [pygame.mixer.Sound('sounds/smb_overworld.wav'), pygame.mixer.Sound('sounds/smb_hurry_overworld.wav'), pygame.mixer.Sound('sounds/smb_underworld.wav'),
+                     pygame.mixer.Sound('sounds/smb_hurry_underworld.wav'), pygame.mixer.Sound('sounds/smb_starman.wav')]
+        effects_lib = [pygame.mixer.Sound('sounds/smb_1-up.wav'), pygame.mixer.Sound('sounds/smb_breakblock.wav'), pygame.mixer.Sound('sounds/smb_bump.wav'),
+                       pygame.mixer.Sound('sounds/smb_coin.wav'), pygame.mixer.Sound('sounds/smb_fireball.wav'), pygame.mixer.Sound('sounds/smb_fireworks.wav'),
+                       pygame.mixer.Sound('sounds/smb_flagpole.wav'), pygame.mixer.Sound('sounds/smb_gameover.wav'), pygame.mixer.Sound('sounds/smb_jump-small.wav'),
+                       pygame.mixer.Sound('sounds/smb_jump-super.wav'), pygame.mixer.Sound('sounds/smb_kick.wav'), pygame.mixer.Sound('sounds/smb_mariodie.wav'),
+                       pygame.mixer.Sound('sounds/smb_pause.wav'), pygame.mixer.Sound('sounds/smb_pipe.wav'), pygame.mixer.Sound('sounds/smb_powerup.wav'),
+                       pygame.mixer.Sound('sounds/smb_powerup_appears.wav'), pygame.mixer.Sound('sounds/smb_stage_clear.wav'), pygame.mixer.Sound('sounds/smb_stomp.wav'),
+                       pygame.mixer.Sound('sounds/smb_warning.wav')]
+        self.sound_lib = [track_lib, effects_lib]
+
+        return self.sound_lib
+
     @staticmethod
     def load_image_library():
         bg_lib = [pygame.image.load('images/bg.png')]
