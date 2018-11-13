@@ -42,6 +42,7 @@ class GameFunctions:
 
     @staticmethod
     def check_bottom_collisions(begin, blocks, bricks, end, floor, mario):
+        ##BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
             pass
@@ -62,7 +63,7 @@ class GameFunctions:
             mario.rect.bottom = blocks[index].rect.top
             mario.jumpFlag = "None"
             return
-
+        ##FLOOR
         if mario.vector.y_velocity >= 0:
             index = mario.rect.collidelist(floor[begin:end])
             if index == -1:
@@ -72,7 +73,7 @@ class GameFunctions:
                 mario.vector.y_velocity = 0
                 mario.jumpFlag = "None"
                 return
-
+        ##BRICKS
         index = mario.rect.collidelist(bricks)
         if index == -1:
             pass
@@ -119,6 +120,7 @@ class GameFunctions:
             if obj.update():
                 goombas.remove(obj)
                 print("dead goomba")
+            obj.blitme()
         for obj in solids:
             obj.blit()
         for obj in smallpipes:

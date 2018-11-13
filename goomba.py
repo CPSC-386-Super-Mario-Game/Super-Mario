@@ -41,7 +41,7 @@ class Goomba(Sprite):
             self.center_x += self.speed_factor
         elif self.moving_left:
             self.center_x -= self.speed_factor
-            if self.rect.left < -100:
+            if self.rect.left < -150:
                 return True
 
         # Update rect object from self.center
@@ -57,7 +57,7 @@ class Goomba(Sprite):
         self.direction_left = not self.direction_left
 
     def blitme(self):
-        self.screen.blit(self.image, self.rect)
+        #self.screen.blit(self.image, self.rect)
         if self.rect.right < 0 or self.rect.left > self.settings.screenWidth:
             return
         self.screen.blit(self.image, self.rect)
