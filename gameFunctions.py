@@ -3,6 +3,7 @@ import sys
 import brick
 import pipe
 import coin
+import miscellaneous
 from goomba import Goomba
 
 
@@ -109,7 +110,7 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes):
+    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes, flags):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
@@ -125,9 +126,11 @@ class GameFunctions:
             obj.blit()
         for obj in largepipes:
             obj.blit()
+        for obj in flags:
+            obj.blit()
     @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes):
-        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes)
+    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags):
+        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes, flags)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
@@ -236,6 +239,14 @@ class GameFunctions:
         return largepipe_list
 
     @staticmethod
+    def load_flag_obj(image_library, rect_list, screen, settings):
+        flag_list = []
+        for rect in rect_list:
+            new_flag = miscellaneous.Flag(image_library, rect, screen, settings)
+            flag_list.append(new_flag)
+        return flag_list
+
+    @staticmethod
     def load_goomba_objects(image_library, rect_list, screen, settings):
         goomba_list = []
         for rect in rect_list:
@@ -279,7 +290,8 @@ class GameFunctions:
         for index, img in enumerate(mystery_lib):
             mystery_lib[index] = pygame.transform.scale(img, (56, 56))
 
-        flag_lib = [pygame.image.load('images/fg/flag.png')]
+        flag_lib = [pygame.image.load('images/fg/flag.png'), pygame.image.load('images/bg/pole.png')]
+        flag_lib[1] = pygame.transform.scale(flag_lib[1], (56, 560))
 
         mushroom_lib = [pygame.image.load('images/fg/mushroom.png')]
 
