@@ -36,6 +36,9 @@ class Main:
                                                    self.settings)
         self.floor_rects = self.map.floor_rects
         self.solid_rects = self.gF.load_solid_objects(self.image_library[8], self.map.solid_rect, self.screen, self.settings)
+        self.smallpipe_rects = self.gF.load_smallpipe_obj(self.image_library[11], self.map.smallpipe_rect, self.screen, self.settings)
+        self.mediumpipe_rects = self.gF.load_mediumpipe_obj(self.image_library[11], self.map.mediumpipe_rect, self.screen, self.settings)
+        self.largepipe_rects = self.gF.load_largepipe_obj(self.image_library[11], self.map.largepipe_rect, self.screen, self.settings)
 
         # Underworld
         self.ugmap = m.UnderworldMap(self.image_library, self.screen, self.settings)
@@ -67,7 +70,7 @@ class Main:
 
                 if not self.gF.overworld_flag:
                     self.background.blit()
-                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas, self.solid_rects)
+                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects)
 
                 else:
                     self.background.ugblit()
@@ -81,7 +84,7 @@ class Main:
                     #     break
                     self.screen.blit(self.image_library[8][3], floor)
 
-                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects)
+                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects)
                 self.mario.blit()
                 pygame.display.flip()
 

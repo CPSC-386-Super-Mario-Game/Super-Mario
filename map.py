@@ -21,6 +21,9 @@ class Map:
         self.goomba_rect = []
         self.mystery_rect = []
         self.solid_rect = []
+        self.smallpipe_rect = []
+        self.mediumpipe_rect = []
+        self.largepipe_rect = []
 
         self.map = []
         self.rect = pygame.Rect(0, 0, settings.tileSize, settings.tileSize)
@@ -69,6 +72,18 @@ class Map:
                     elif flag == "s":
                         map_row.append(flag)
                         self.solid_rect.append(copy.copy())
+                        copy.left = copy.right
+                    elif flag == "u":
+                        map_row.append(flag)
+                        self.smallpipe_rect.append(copy.copy())
+                        copy.left = copy.right
+                    elif flag == "U":
+                        map_row.append(flag)
+                        self.mediumpipe_rect.append(copy.copy())
+                        copy.left = copy.right
+                    elif flag == "w":
+                        map_row.append(flag)
+                        self.largepipe_rect.append(copy.copy())
                         copy.left = copy.right
                     else:
                         copy.left = copy.right

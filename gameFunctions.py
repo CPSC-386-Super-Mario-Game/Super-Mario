@@ -109,7 +109,7 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(bricks, blocks, goombas, solids):
+    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
@@ -119,10 +119,15 @@ class GameFunctions:
             obj.blitme()
         for obj in solids:
             obj.blit()
-
+        for obj in smallpipes:
+            obj.blit()
+        for obj in mediumpipes:
+            obj.blit()
+        for obj in largepipes:
+            obj.blit()
     @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario, solids):
-        background = mario.update_x(background, floor, bricks, blocks, solids)
+    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes):
+        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
@@ -207,6 +212,30 @@ class GameFunctions:
         return block_list
 
     @staticmethod
+    def load_smallpipe_obj(image_library, rect_list, screen, settings):
+        smallpipe_list = []
+        for rect in rect_list:
+            new_smallpipe = pipe.SmallPipe(image_library, rect, screen, settings)
+            smallpipe_list.append(new_smallpipe)
+        return smallpipe_list
+
+    @staticmethod
+    def load_mediumpipe_obj(image_library, rect_list, screen, settings):
+        mediumpipe_list = []
+        for rect in rect_list:
+            new_mediumpipe = pipe.MediumPipe(image_library, rect, screen, settings)
+            mediumpipe_list.append(new_mediumpipe)
+        return mediumpipe_list
+
+    @staticmethod
+    def load_largepipe_obj(image_library, rect_list, screen, settings):
+        largepipe_list = []
+        for rect in rect_list:
+            new_largepipe = pipe.LargePipe(image_library, rect, screen, settings)
+            largepipe_list.append(new_largepipe)
+        return largepipe_list
+
+    @staticmethod
     def load_goomba_objects(image_library, rect_list, screen, settings):
         goomba_list = []
         for rect in rect_list:
@@ -283,6 +312,9 @@ class GameFunctions:
                      pygame.image.load('images/fg/pipe_left.png')]
         pipes_lib[4] = pygame.transform.scale(pipes_lib[4], (162, 112))
         pipes_lib[3] = pygame.transform.scale(pipes_lib[3], (112, 616))
+        pipes_lib[0] = pygame.transform.scale(pipes_lib[0], (112, 112))
+        pipes_lib[1] = pygame.transform.scale(pipes_lib[1], (112, 168))
+        pipes_lib[2] = pygame.transform.scale(pipes_lib[2], (112, 224))
 
         big_lib = [pygame.image.load('images/mario/big_idle.png'), pygame.image.load('images/mario/big_turn.png'),
                    pygame.image.load('images/mario/big_jump.png'), pygame.image.load('images/mario/big_walk0.png'),
