@@ -20,6 +20,9 @@ class Background:
         self.ugimage = pygame.Surface(screen.get_size())
         self.ugimage.fill((0, 0, 0))
 
+        self.image = pygame.Surface(screen.get_size())
+        self.image.fill((0, 0, 0))
+
         # Frame of Reference
         self.floor_begin = 0
         self.floor_end = 20

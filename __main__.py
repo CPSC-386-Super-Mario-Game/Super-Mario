@@ -74,10 +74,10 @@ class Main:
                                            self.ug_coins)
 
                 for floor in self.floor_rects:
-                    if floor.right < 0:
-                        continue
-                    if floor.left > self.settings.screenWidth:
-                        break
+                    # if floor.right < 0:
+                    #     continue
+                    # if floor.left > self.settings.screenWidth:
+                    #     break
                     self.screen.blit(self.image_library[8][3], floor)
 
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario)
