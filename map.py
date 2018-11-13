@@ -20,6 +20,7 @@ class Map:
         self.floor_rects = []
         self.goomba_rect = []
         self.mystery_rect = []
+        self.solid_rect = []
 
         self.map = []
         self.rect = pygame.Rect(0, 0, settings.tileSize, settings.tileSize)
@@ -64,6 +65,10 @@ class Map:
                     elif flag == "g":
                         map_row.append(flag)
                         self.goomba_rect.append(copy.copy())
+                        copy.left = copy.right
+                    elif flag == "s":
+                        map_row.append(flag)
+                        self.solid_rect.append(copy.copy())
                         copy.left = copy.right
                     else:
                         copy.left = copy.right

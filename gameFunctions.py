@@ -109,7 +109,7 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(bricks, blocks, goombas):
+    def blit_objects(bricks, blocks, goombas, solids):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
@@ -117,10 +117,12 @@ class GameFunctions:
         for obj in goombas:
             obj.update()
             obj.blitme()
+        for obj in solids:
+            obj.blit()
 
     @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario):
-        background = mario.update_x(background, floor, bricks, blocks)
+    def update_mario(background, blocks, bricks, floor, mario, solids):
+        background = mario.update_x(background, floor, bricks, blocks, solids)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
@@ -179,6 +181,14 @@ class GameFunctions:
             new_brick = brick.Brick(image_library, rect, screen, settings)
             brick_list.append(new_brick)
         return brick_list
+
+    @staticmethod
+    def load_solid_objects(image_library, rect_list, screen, settings):
+        solid_list = []
+        for rect in rect_list:
+            new_solid = brick.Solid(image_library, rect, screen, settings)
+            solid_list.append(new_solid)
+        return solid_list
 
     @staticmethod
     def load_ugfloor_objects(image_library, rect_list, screen, settings):

@@ -35,6 +35,7 @@ class Main:
         self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
                                                    self.settings)
         self.floor_rects = self.map.floor_rects
+        self.solid_rects = self.gF.load_solid_objects(self.image_library[8], self.map.solid_rect, self.screen, self.settings)
 
         # Underworld
         self.ugmap = m.UnderworldMap(self.image_library, self.screen, self.settings)
@@ -53,20 +54,20 @@ class Main:
     #   Game loop
     def play(self):
         while True:
-            if self.gF.overworld_flag:  # testing purposes, will set mario position differently later
-                self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
-                                              self.settings,
-                                              self.map.mario_coor[0][0], self.map.mario_coor[0][1])
-            else:
-                self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
-                                              self.settings,
-                                              self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
+            # if self.gF.overworld_flag:  # testing purposes, will set mario position differently later
+            #     self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
+            #                                   self.settings,
+            #                                   self.map.mario_coor[0][0], self.map.mario_coor[0][1])
+            # else:
+            #     self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
+            #                                   self.settings,
+            #                                   self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
             while not self.gF.finished:
                 self.gF.check_events(self.mario)
 
                 if not self.gF.overworld_flag:
                     self.background.blit()
-                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas)
+                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas, self.solid_rects)
 
                 else:
                     self.background.ugblit()
@@ -80,7 +81,7 @@ class Main:
                     #     break
                     self.screen.blit(self.image_library[8][3], floor)
 
-                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario)
+                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects)
                 self.mario.blit()
                 pygame.display.flip()
 
