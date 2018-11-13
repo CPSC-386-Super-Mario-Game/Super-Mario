@@ -116,8 +116,9 @@ class GameFunctions:
         for obj in blocks:
             obj.blit()
         for obj in goombas:
-            obj.update()
-            obj.blitme()
+            if obj.update():
+                goombas.remove(obj)
+                print("dead goomba")
         for obj in solids:
             obj.blit()
         for obj in smallpipes:

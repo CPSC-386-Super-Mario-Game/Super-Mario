@@ -39,12 +39,15 @@ class Goomba(Sprite):
     def update(self):
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center_x += self.speed_factor
-        elif self.moving_left and self.rect.left > 0:
+        elif self.moving_left:
             self.center_x -= self.speed_factor
+            if self.rect.left < -100:
+                return True
 
         # Update rect object from self.center
         self.rect.x = self.center_x
         self.rect.y = self.center_y
+        return False
 
     def flip_img(self):
         if self.direction_left:
