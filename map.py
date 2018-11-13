@@ -25,6 +25,7 @@ class Map:
         self.mediumpipe_rect = []
         self.largepipe_rect = []
         self.flag_rect = []
+        self.castle_rect = []
 
         self.map = []
         self.rect = pygame.Rect(0, 0, settings.tileSize, settings.tileSize)
@@ -89,6 +90,10 @@ class Map:
                     elif flag == "f":
                         map_row.append(flag)
                         self.flag_rect.append(copy.copy())
+                        copy.left = copy.right
+                    elif flag == "C":
+                        map_row.append(flag)
+                        self.castle_rect.append(copy.copy())
                         copy.left = copy.right
                     else:
                         copy.left = copy.right
