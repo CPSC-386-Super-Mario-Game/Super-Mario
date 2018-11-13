@@ -120,7 +120,7 @@ class GameFunctions:
 
     @staticmethod
     def update_mario(background, blocks, bricks, floor, mario):
-        background = mario.update_x(background, floor)
+        background = mario.update_x(background, floor, bricks, blocks)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
