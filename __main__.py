@@ -89,7 +89,7 @@ class Main:
                     #     break
                     self.screen.blit(self.image_library[8][3], floor)
 
-                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects, self.flag_rects, self.castle_rects)
+                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects, self.mario, self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects, self.largepipe_rects, self.flag_rects, self.castle_rects, self.goombas)
                 self.mario.blit()
                 pygame.display.flip()
 

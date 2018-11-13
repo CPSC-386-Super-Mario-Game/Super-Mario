@@ -12,7 +12,8 @@ class Goomba(Sprite):
         self.speed_factor = 1  # -1 left +1 right
         self.settings = settings
         # self.y_mod = 200
-        self.invincible = False
+        self.dead = False
+        self.dead_counter = 0
         self.direction_left = True
 
         self.images = []
@@ -37,7 +38,13 @@ class Goomba(Sprite):
         # self.moving_down = False
 
     def update(self):
-        if self.moving_right and self.rect.right < self.screen_rect.right:
+        if self.dead:
+            self.image = self.images[2]
+            if self.dead_counter == 60:
+                return True
+            else:
+                self.dead_counter += 1
+        elif self.moving_right and self.rect.right < self.screen_rect.right:
             self.center_x += self.speed_factor
         elif self.moving_left:
             self.center_x -= self.speed_factor
@@ -50,7 +57,9 @@ class Goomba(Sprite):
         return False
 
     def flip_img(self):
-        if self.direction_left:
+        if self.dead:
+            pass
+        elif self.direction_left:
             self.image = self.images[1]
         else:
             self.image = self.images[0]
