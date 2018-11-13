@@ -110,12 +110,13 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes, flags):
+    def blit_objects(bricks, blocks, goombas, solids, smallpipes, mediumpipes, largepipes, flags, castles):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
             obj.blit()
         for obj in goombas:
+            obj.blitme()
             if obj.update():
                 goombas.remove(obj)
                 print("dead goomba")
@@ -129,9 +130,11 @@ class GameFunctions:
             obj.blit()
         for obj in flags:
             obj.blit()
+        for obj in castles:
+            obj.blit()
     @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags):
-        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes, flags)
+    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags, castles):
+        background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes, flags, castles)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, mario)
@@ -248,6 +251,14 @@ class GameFunctions:
         return flag_list
 
     @staticmethod
+    def load_castle_obj(image_library, rect_list, screen, settings):
+        castle_list = []
+        for rect in rect_list:
+            new_castle = miscellaneous.Castle(image_library, rect, screen, settings)
+            castle_list.append(new_castle)
+        return castle_list
+
+    @staticmethod
     def load_goomba_objects(image_library, rect_list, screen, settings):
         goomba_list = []
         for rect in rect_list:
@@ -291,8 +302,9 @@ class GameFunctions:
         for index, img in enumerate(mystery_lib):
             mystery_lib[index] = pygame.transform.scale(img, (56, 56))
 
-        flag_lib = [pygame.image.load('images/fg/flag.png'), pygame.image.load('images/bg/pole.png')]
+        flag_lib = [pygame.image.load('images/fg/flag.png'), pygame.image.load('images/bg/pole.png'), pygame.image.load('images/bg/castle.png')]
         flag_lib[1] = pygame.transform.scale(flag_lib[1], (56, 560))
+        flag_lib[2] = pygame.transform.scale(flag_lib[2], (280, 280))
 
         mushroom_lib = [pygame.image.load('images/fg/mushroom.png')]
 
