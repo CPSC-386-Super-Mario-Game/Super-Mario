@@ -45,14 +45,19 @@ class Koopa(Sprite):
             self.center_x -= mario.vector.x_velocity
         if self.dead:
             self.image = self.images[4]
-            if self.dead_counter == 60:
-                return True
+            if self.dead_counter == 600:
+                self.center_y -= 28
+                self.speed_factor = 1
+                self.dead_counter = 0
+                self.dead = False
             elif self.dead_counter == 0:
                 # self.soundlib[1][10].play()
-                self.rect.y -= 28
+                self.center_y += 28
+                self.speed_factor = 3
+                self.dead_counter += 1
             else:
                 self.dead_counter += 1
-        elif self.moving_right and self.rect.right < self.screen_rect.right:
+        if self.moving_right and self.rect.right < self.screen_rect.right:
             self.center_x += self.speed_factor
         elif self.moving_left:
             self.center_x -= self.speed_factor
