@@ -73,14 +73,14 @@ class Main:
     #   Game loop
     def play(self):
         while True:
-            # if self.gF.overworld_flag:  # testing purposes, will set mario position differently later
-            #     self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
-            #                                   self.settings,
-            #                                   self.map.mario_coor[0][0], self.map.mario_coor[0][1])
-            # else:
-            #     self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
-            #                                   self.settings,
-            #                                   self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
+            if self.gF.overworld_flag:  # testing purposes, will set mario position differently later
+                self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
+                                              self.settings,
+                                              self.map.mario_coor[0][0], self.map.mario_coor[0][1], self.sound_library)
+            else:
+                self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
+                                              self.settings,
+                                              self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1], self.sound_library)
             pygame.mouse.set_visible(True)
             mloop = MenuLoop(self.screen, self.stats, finished=False, highscore_screen=False)
             while not mloop.finished:
@@ -103,30 +103,32 @@ class Main:
                     self.gF.game_over_flag = False
                     self.sound_library[0][0].play(-1)
                 self.gF.check_events(self.mario, self.sound_library, self.stats, self.gF.overworld_flag)
-                for goomba in self.goombas:
-                    goomba.update(self.mario)
-                for koopa in self.koopas:
-                    koopa.update(self.mario)
-                self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
-                                                       self.mario, self.solid_rects, self.smallpipe_rects,
-                                                       self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
-                                                       self.castle_rects, self.goombas, self.koopas, self.sound_library,
-                                                       self.stats)
+
                 if not self.gF.overworld_flag:
+                    for goomba in self.goombas:
+                        goomba.update(self.mario)
+                    for koopa in self.koopas:
+                        koopa.update(self.mario)
+                    self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
+                                                           self.mario, self.solid_rects, self.smallpipe_rects,
+                                                           self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
+                                                           self.castle_rects, self.goombas, self.koopas,
+                                                           self.sound_library,
+                                                           self.stats)
                     self.background.blit()
                     self.stats.blit_score()
                     self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas,
                                          self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects,
                                          self.largepipe_rects, self.flag_rects, self.castle_rects)
+                    for floor in self.floor_rects:
+                        self.screen.blit(self.image_library[8][3], floor)
 
                 else:
+                    
                     self.background.ugblit()
                     self.stats.blit_score()
                     self.gF.blit_ugobjects(self.ug_bricks, self.ug_blocks, self.ug_leftpipes, self.ug_hugepipes,
                                            self.ug_coins)
-
-                for floor in self.floor_rects:
-                    self.screen.blit(self.image_library[8][3], floor)
 
                 self.mario.blit()
                 pygame.display.flip()

@@ -25,6 +25,8 @@ class GameFunctions:
         self.death_flag = False
         self.game_over_flag = False
         self.overworld_flag = False
+        self.on_warp_pipe = False
+        self.warp_underworld = False
 
     def check_time(self, blocks, goombas, koopas, mario, coins, stats, sound_library):
         self.block_timer -= self.dt
@@ -67,8 +69,7 @@ class GameFunctions:
 
         self.dt = self.timer.tick(144) / 144
 
-    @staticmethod
-    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes, largepipes):
+    def check_bottom_collisions(self, begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes, largepipes):
         # BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -193,16 +194,20 @@ class GameFunctions:
         # MARIO X LARGEPIPE
         index = mario.rect.collidelist(largepipes)
         if index == -1:
+            self.on_warp_pipe = False
             pass
         elif mario.vector.y_velocity < 0:
             mario.rect.top = largepipes[index].rect.bottom + 7
             mario.vector.y_velocity = 1.5
             mario.jumpFlag = "falling"
+            self.on_warp_pipe = False
             return
         else:
             mario.vector.y_velocity = 0
             mario.rect.bottom = largepipes[index].rect.top - 1
             mario.jumpFlag = "None"
+            if index == 1:
+                self.on_warp_pipe = True
             stats.score_progression_index = 0
             return
 
@@ -365,25 +370,25 @@ class GameFunctions:
         for obj in coins:
             obj.blit()
 
-    @staticmethod
-    def check_events(mario, sound_lib, stats, overworld_flag):
+    def check_events(self, mario, sound_lib, stats, overworld_flag):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 stats = stats
-                GameFunctions.check_keydown_events(event, mario, sound_lib, stats, overworld_flag)
+                self.check_keydown_events(event, mario, sound_lib, stats, overworld_flag)
             elif event.type == pygame.KEYUP:
                 GameFunctions.check_keyup_events(event, mario)
 
-    @staticmethod
-    def check_keydown_events(event2, mario, sound_lib, stats, overworld_flag):
+    def check_keydown_events(self, event2, mario, sound_lib, stats, overworld_flag):
         if event2.key == pygame.K_RIGHT and mario.vector.x_velocity < 1:
             mario.change_direction("right")
             mario.flip_back()
         elif event2.key == pygame.K_LEFT and mario.vector.x_velocity > -1:
             mario.change_direction("left")
             mario.flip_direction()
+        elif event2.key == pygame.K_DOWN and self.on_warp_pipe:
+            self.overworld_flag = True
         elif event2.key == pygame.K_UP or event2.key == pygame.K_SPACE:
             mario.jump()
         elif event2.key == pygame.K_q:
