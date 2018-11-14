@@ -6,6 +6,10 @@ class Score:
         # Stats
         self.score_progression = [100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000]
         self.score_progression_index = 0
+        self.rising_score_rect_list = []
+        self.rising_score_value_list = []
+        self.rising_score_frame_list = []
+        self.rising_score_index = 0
         self.score = 0
         self.coins = 0
         self.world = "1-1"
@@ -49,3 +53,14 @@ class Score:
         self.screen.blit(self.time_to_text, self.time_rect)
         self.screen.blit(self.lives_text, self.lives_text_rect)
         self.screen.blit(self.lives_to_text, self.lives_rect)
+
+        for score in range(self.rising_score_index):
+            rising_score_to_text = self.font.render(str(self.rising_score_value_list[score]), True, (255, 255, 255))
+            self.screen.blit(rising_score_to_text, self.rising_score_rect_list[score])
+            self.rising_score_rect_list[score].y -= 1
+            self.rising_score_frame_list[score] -= 1
+            if self.rising_score_frame_list[score] <= 0:
+                self.rising_score_index -= 1
+                del self.rising_score_rect_list[score]
+                del self.rising_score_value_list[score]
+                del self.rising_score_frame_list[score]

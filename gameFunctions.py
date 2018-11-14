@@ -105,12 +105,16 @@ class GameFunctions:
         elif goombas[index].dead:
             pass
         elif mario.jumpFlag == "falling":
-            goombas[index].dead = True
             stats.score += stats.score_progression[stats.score_progression_index]
+            stats.rising_score_value_list.append(stats.score_progression[stats.score_progression_index])
+            stats.rising_score_rect_list.append(pygame.Rect(goombas[index].rect.x, goombas[index].rect.y, 30, 30))
             stats.score_progression_index += 1
+            stats.rising_score_index += 1
+            stats.rising_score_frame_list.append(60)
             if stats.score_progression_index > 9:
                 stats.lives += 1
                 stats.score_progression_index = 0
+            goombas[index].dead = True
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
@@ -122,12 +126,16 @@ class GameFunctions:
         elif koopas[index].dead:
              pass
         elif mario.jumpFlag == "falling":
-            koopas[index].dead = True
             stats.score += stats.score_progression[stats.score_progression_index]
+            stats.rising_score_value_list.append(stats.score_progression[stats.score_progression_index])
+            stats.rising_score_rect_list.append(pygame.Rect(koopas[index].rect.x, koopas[index].rect.y, 30, 30))
             stats.score_progression_index += 1
+            stats.rising_score_index += 1
+            stats.rising_score_frame_list.append(60)
             if stats.score_progression_index > 9:
                 stats.lives += 1
                 stats.score_progression_index = 0
+            koopas[index].dead = True
             sound_library[1][10].play()
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
