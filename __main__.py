@@ -5,6 +5,7 @@ import pygame
 import settings as s
 import map as m
 import mario as mario
+import stats
 
 
 class Main:
@@ -26,6 +27,7 @@ class Main:
         self.image_library = self.gF.load_image_library()
         self.sound_library = self.gF.load_sound_library()
         self.background = b.Background(self.image_library, self.screen, self.settings)
+        self.stats = stats.Score(self.screen)
         self.map = m.Map(self.image_library, self.screen, self.settings)
 
         self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen, self.settings,
@@ -77,17 +79,17 @@ class Main:
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
                                                        self.mario, self.solid_rects, self.smallpipe_rects,
                                                        self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
-                                                       self.castle_rects, self.goombas, self.koopas, self.sound_library)
+                                                       self.castle_rects, self.goombas, self.koopas, self.sound_library, self.stats)
                 if not self.gF.overworld_flag:
                     self.background.blit()
-                    self.background.blit_score()
+                    self.stats.blit_score()
                     self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas, self.solid_rects, self.smallpipe_rects,
                                          self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
                                          self.castle_rects)
 
                 else:
                     self.background.ugblit()
-                    self.background.blit_score()
+                    self.stats.blit_score()
                     self.gF.blit_ugobjects(self.ug_bricks, self.ug_blocks, self.ug_leftpipes, self.ug_hugepipes,
                                            self.ug_coins)
 

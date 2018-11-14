@@ -49,7 +49,7 @@ class GameFunctions:
         self.dt = self.timer.tick(144) / 144
 
     @staticmethod
-    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library):
+    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats):
         ##BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -103,6 +103,7 @@ class GameFunctions:
             pass
         elif mario.jumpFlag == "falling":
             goombas[index].dead = True
+            stats.score += 100
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
@@ -115,6 +116,7 @@ class GameFunctions:
              pass
         elif mario.jumpFlag == "falling":
             koopas[index].dead = True
+            stats.score += 100
             sound_library[1][10].play()
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
@@ -174,12 +176,12 @@ class GameFunctions:
 
     @staticmethod
     def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags,
-                     castles, goombas, koopas, sound_library):
+                     castles, goombas, koopas, sound_library, stats):
         background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
                                     flags, castles, goombas, koopas)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
-        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario, sound_library)
+        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario, sound_library, stats)
         return background
 
     @staticmethod
