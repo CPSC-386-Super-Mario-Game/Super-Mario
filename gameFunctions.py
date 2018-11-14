@@ -70,6 +70,7 @@ class GameFunctions:
             mario.vector.y_velocity = 0
             mario.rect.bottom = blocks[index].rect.top
             mario.jumpFlag = "None"
+            stats.score_progression_index = 0
             return
         ##FLOOR
         if mario.vector.y_velocity >= 0:
@@ -80,6 +81,7 @@ class GameFunctions:
                 mario.rect.bottom = floor[index].top
                 mario.vector.y_velocity = 0
                 mario.jumpFlag = "None"
+                stats.score_progression_index = 0
                 return
         ##BRICKS
         index = mario.rect.collidelist(bricks)
@@ -94,6 +96,7 @@ class GameFunctions:
             mario.vector.y_velocity = 0
             mario.rect.bottom = bricks[index].rect.top - 1
             mario.jumpFlag = "None"
+            stats.score_progression_index = 0
             return
         ##GOOMBAS
         index = mario.rect.collidelist(goombas)
@@ -103,7 +106,11 @@ class GameFunctions:
             pass
         elif mario.jumpFlag == "falling":
             goombas[index].dead = True
-            stats.score += 100
+            stats.score += stats.score_progression[stats.score_progression_index]
+            stats.score_progression_index += 1
+            if stats.score_progression_index > 9:
+                stats.lives += 1
+                stats.score_progression_index = 0
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
@@ -116,7 +123,11 @@ class GameFunctions:
              pass
         elif mario.jumpFlag == "falling":
             koopas[index].dead = True
-            stats.score += 100
+            stats.score += stats.score_progression[stats.score_progression_index]
+            stats.score_progression_index += 1
+            if stats.score_progression_index > 9:
+                stats.lives += 1
+                stats.score_progression_index = 0
             sound_library[1][10].play()
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0

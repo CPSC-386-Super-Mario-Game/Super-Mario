@@ -4,6 +4,8 @@ class Score:
     def __init__(self, screen):
         self.screen = screen
         # Stats
+        self.score_progression = [100, 200, 400, 500, 800, 1000, 2000, 4000, 5000, 8000]
+        self.score_progression_index = 0
         self.score = 0
         self.coins = 0
         self.world = "1-1"
