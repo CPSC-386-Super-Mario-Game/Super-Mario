@@ -6,6 +6,7 @@ import coin
 import miscellaneous
 from goomba import Goomba
 from koopa import Koopa
+import time
 
 
 class GameFunctions:
@@ -21,6 +22,8 @@ class GameFunctions:
         self.time_timer = 8
         self.mario_timer = 2
 
+        self.death_flag = False
+        self.game_over_flag = False
         self.overworld_flag = False
 
     def check_time(self, blocks, goombas, koopas, mario, coins, stats, sound_library):
@@ -336,14 +339,15 @@ class GameFunctions:
         for obj in castles:
             obj.blit()
 
-    @staticmethod
-    def update_mario(background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags,
+    def update_mario(self, background, blocks, bricks, floor, mario, solids, smallpipes, mediumpipes, largepipes, flags,
                      castles, goombas, koopas, sound_library, stats):
         background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
                                     flags, castles)
-        GameFunctions.check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas)
+        self.check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas)
         mario.update_y()
-        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor,
+        if mario.rect.y > 896:
+            self.mario_death(stats, sound_library, mario)
+        self.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor,
                                               goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes,
                                               largepipes)
         return background
@@ -530,8 +534,10 @@ class GameFunctions:
             coin_list.append(new_coin)
         return coin_list
 
-    def game_over(self, stats):
+    def game_over(self, stats, sound_library):
         self.finished = True
+        self.game_over_flag = True
+        sound_library[1][7].play()
         stats.lives = 3
         if stats.score > stats.high_score:
             stats.high_score = stats.score
@@ -542,6 +548,18 @@ class GameFunctions:
         stats.score = 0
         stats.time = 1000
         stats.coins = 0
+
+    def mario_death(self, stats, sound_library, mario):
+        stats.lives -= 1
+        stats.time = 1000
+        pygame.mixer.set_num_channels(0)
+        pygame.mixer.set_num_channels(8)
+        sound_library[1][11].play()
+        time.sleep(3)
+
+        self.death_flag = True
+        if stats.lives == 0:
+            self.game_over(stats, sound_library)
 
 
     @staticmethod

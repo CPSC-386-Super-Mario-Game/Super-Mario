@@ -94,7 +94,14 @@ class Main:
                         self.update_highscore_screen(mloop)
             pygame.mouse.set_visible(False)
             self.sound_library[0][0].play(-1)
+            self.initialize()
+            self.gF = GameFunctions(finished=False)
             while not self.gF.finished:
+                if self.gF.death_flag or self.gF.game_over_flag:
+                    self.initialize()
+                    self.gF.death_flag = False
+                    self.gF.game_over_flag = False
+                    self.sound_library[0][0].play(-1)
                 self.gF.check_events(self.mario, self.sound_library, self.stats, self.gF.overworld_flag)
                 for goomba in self.goombas:
                     goomba.update(self.mario)
@@ -137,6 +144,43 @@ class Main:
         self.screen.fill(self.settings.bgColor)
         mloop.blit2()
         pygame.display.flip()
+
+    def initialize(self):
+        self.map = m.Map(self.image_library, self.screen, self.settings)
+
+        self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen, self.settings,
+                                      self.map.mario_coor[0][0], self.map.mario_coor[0][1], self.sound_library)
+        self.bricks = self.gF.load_brick_objects(self.image_library[1], self.map.brick_rect, self.screen, self.settings)
+        self.blocks = self.gF.load_block_objects(self.image_library[2], self.map.mystery_rect, self.screen,
+                                                 self.settings)
+        self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
+                                                   self.settings, self.sound_library)
+        self.koopas = self.gF.load_koopa_objects(self.image_library[18], self.map.koopa_coor, self.screen,
+                                                 self.settings, self.sound_library)
+        self.floor_rects = self.map.floor_rects
+        self.solid_rects = self.gF.load_solid_objects(self.image_library[8], self.map.solid_rect, self.screen,
+                                                      self.settings)
+        self.smallpipe_rects = self.gF.load_smallpipe_obj(self.image_library[11], self.map.smallpipe_rect, self.screen,
+                                                          self.settings)
+        self.mediumpipe_rects = self.gF.load_mediumpipe_obj(self.image_library[11], self.map.mediumpipe_rect,
+                                                            self.screen, self.settings)
+        self.largepipe_rects = self.gF.load_largepipe_obj(self.image_library[11], self.map.largepipe_rect, self.screen,
+                                                          self.settings)
+        self.flag_rects = self.gF.load_flag_obj(self.image_library[3], self.map.flag_rect, self.screen, self.settings)
+        self.castle_rects = self.gF.load_castle_obj(self.image_library[3], self.map.castle_rect, self.screen,
+                                                    self.settings)
+
+        # Underworld
+        self.ugmap = m.UnderworldMap(self.image_library, self.screen, self.settings)
+        self.ug_bricks = self.gF.load_brick_objects(self.image_library[8], self.ugmap.brick_rect, self.screen,
+                                                    self.settings)
+        self.ug_blocks = self.gF.load_ugfloor_objects(self.image_library[8], self.ugmap.floor_rect, self.screen,
+                                                      self.settings)
+        self.ug_leftpipes = self.gF.load_leftpipe_obj(self.image_library[11], self.ugmap.leftpipe_rect, self.screen,
+                                                      self.settings)
+        self.ug_hugepipes = self.gF.load_hugepipe_obj(self.image_library[11], self.ugmap.hugepipe_rect, self.screen,
+                                                      self.settings)
+        self.ug_coins = self.gF.load_coin_objs(self.image_library[7], self.ugmap.coin_rect, self.screen, self.settings)
 
 if __name__ == '__main__':
     game = Main()
