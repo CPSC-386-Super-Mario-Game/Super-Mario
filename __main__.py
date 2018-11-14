@@ -80,12 +80,14 @@ class Main:
                                                        self.castle_rects, self.goombas, self.koopas, self.sound_library)
                 if not self.gF.overworld_flag:
                     self.background.blit()
+                    self.background.blit_score()
                     self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas, self.solid_rects, self.smallpipe_rects,
                                          self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,
                                          self.castle_rects)
 
                 else:
                     self.background.ugblit()
+                    self.background.blit_score()
                     self.gF.blit_ugobjects(self.ug_bricks, self.ug_blocks, self.ug_leftpipes, self.ug_hugepipes,
                                            self.ug_coins)
 
