@@ -117,6 +117,9 @@ class Mario:
             for i in range(0, 6):
                 self.regular_img_lib[i] = pygame.transform.flip(self.regular_img_lib[i], True, False)
                 self.flipped = False
+
+    def die(self):
+        self.blitIndex = 6
     '''
         small_lib = [pygame.image.load('images/mario/small_idle.png'),
                      pygame.image.load('images/mario/small_turn.png'),

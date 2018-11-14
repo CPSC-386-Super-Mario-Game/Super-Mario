@@ -15,6 +15,7 @@ class Flag:
     def update_x_coor(self, speed):
         self.rect.x += speed
 
+
 class Castle:
     def __init__(self, image_library, rect, screen, settings):
         self.screen = screen
