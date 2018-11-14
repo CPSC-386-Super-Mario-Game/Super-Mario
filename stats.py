@@ -16,6 +16,7 @@ class Score:
         self.world = "1-1"
         self.time = 1000
         self.lives = 3
+        self.high_score = 0
 
         self.font = pygame.font.SysFont(None, 40)
         self.score_text_rect = pygame.Rect(100, 0, 30, 30)

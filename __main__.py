@@ -6,6 +6,7 @@ import settings as s
 import map as m
 import mario as mario
 import stats
+from menuloop import MenuLoop
 
 
 class Main:
@@ -13,7 +14,6 @@ class Main:
         #   Provides consistent window positioning.
         os.environ['SDL_VIDEO_WINDOW_POS'] = '60, 35'
         pygame.init()
-        pygame.mouse.set_visible(False)
         self.clock = pygame.time.Clock()                                         # Used for FPS + time-tracking
 
         #   Initial set-up
@@ -66,8 +66,6 @@ class Main:
 
         self.i = 0
 
-        self.sound_library[0][0].play(-1)
-
     #   Game loop
     def play(self):
         while True:
@@ -79,6 +77,19 @@ class Main:
             #     self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
             #                                   self.settings,
             #                                   self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
+            pygame.mouse.set_visible(True)
+            mloop = MenuLoop(self.screen, self.stats, finished=False, highscore_screen=False)
+            while not mloop.finished:
+                mloop.check_events()
+                mloop.update()
+                self.update_menu_screen(mloop)
+                if mloop.highscore_screen == True:
+                    while mloop.highscore_screen:
+                        mloop.check_highscore_events()
+                        mloop.update_highscore_screen()
+                        self.update_highscore_screen(mloop)
+            pygame.mouse.set_visible(False)
+            self.sound_library[0][0].play(-1)
             while not self.gF.finished:
                 self.gF.check_events(self.mario, self.sound_library, self.stats, self.gF.overworld_flag)
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
@@ -109,6 +120,15 @@ class Main:
                                    self.sound_library)
                 self.clock.tick(self.settings.FPS)                                     # Locks game at designated FPS
 
+    def update_menu_screen(self, mloop):
+        self.screen.fill(self.settings.bgColor)
+        mloop.blitme()
+        pygame.display.flip()
+
+    def update_highscore_screen(self, mloop):
+        self.screen.fill(self.settings.bgColor)
+        mloop.blit2()
+        pygame.display.flip()
 
 if __name__ == '__main__':
     game = Main()
