@@ -18,10 +18,11 @@ class GameFunctions:
         self.goomba_timer = 2
         self.koopa_timer = 2
         self.coin_timer = 1
+        self.time_timer = 8
 
         self.overworld_flag = False
 
-    def check_time(self, blocks, goombas, koopas, coins):
+    def check_time(self, blocks, goombas, koopas, coins, stats, sound_library):
         self.block_timer -= self.dt
         if self.block_timer < 0:
             self.block_timer = 1
@@ -45,6 +46,15 @@ class GameFunctions:
             self.coin_timer = 1
             for coin in coins:
                 coin.change_index()
+
+        self.time_timer -= self.dt
+        if self.time_timer < 0:
+            self.time_timer = 1
+            stats.time -= 1
+            if stats.time == 250:
+                pygame.mixer.set_num_channels(0)
+                pygame.mixer.set_num_channels(8)
+                sound_library[0][1].play(-1)
 
         self.dt = self.timer.tick(144) / 144
 

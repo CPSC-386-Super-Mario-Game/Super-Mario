@@ -13,7 +13,7 @@ class Score:
         self.score = 0
         self.coins = 0
         self.world = "1-1"
-        self.time = 400
+        self.time = 1000
         self.lives = 3
 
         self.font = pygame.font.SysFont(None, 40)
