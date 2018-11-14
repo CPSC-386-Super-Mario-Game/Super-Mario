@@ -64,6 +64,10 @@ class Main:
                                                       self.settings)
         self.ug_coins = self.gF.load_coin_objs(self.image_library[7], self.ugmap.coin_rect, self.screen, self.settings)
 
+        file = open('highscore.txt', 'r')
+        self.stats.high_score = int(file.read())
+        file.close()
+
         self.i = 0
 
     #   Game loop
