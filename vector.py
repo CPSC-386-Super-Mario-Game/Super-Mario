@@ -48,6 +48,9 @@ class Vector:
     def jump(self):
         self.y_velocity = self.jumpIV
 
+    def jump_small(self):
+        self.y_velocity = -2
+
     def change_direction(self, direction):
         if direction == "left":
             self.x_velocity -= 1

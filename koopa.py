@@ -1,7 +1,5 @@
-from mario import Mario
 import pygame
 from pygame.sprite import Sprite
-from map import Map
 
 
 class Koopa(Sprite):
@@ -50,7 +48,7 @@ class Koopa(Sprite):
             if self.dead_counter == 60:
                 return True
             elif self.dead_counter == 0:
-                #self.soundlib[1][10].play()
+                # self.soundlib[1][10].play()
                 self.rect.y -= 28
             else:
                 self.dead_counter += 1
@@ -86,7 +84,7 @@ class Koopa(Sprite):
             self.image = self.images[0 + self.lr]
 
     def blitme(self):
-        #self.screen.blit(self.image, self.rect)
+        # self.screen.blit(self.image, self.rect)
         if self.rect.right < 0 or self.rect.left > self.settings.screenWidth:
             return
         self.screen.blit(self.image, self.rect)

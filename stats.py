@@ -1,5 +1,6 @@
 import pygame
 
+
 class Score:
     def __init__(self, screen):
         self.screen = screen
@@ -54,13 +55,16 @@ class Score:
         self.screen.blit(self.lives_text, self.lives_text_rect)
         self.screen.blit(self.lives_to_text, self.lives_rect)
 
-        for score in range(self.rising_score_index):
-            rising_score_to_text = self.font.render(str(self.rising_score_value_list[score]), True, (255, 255, 255))
-            self.screen.blit(rising_score_to_text, self.rising_score_rect_list[score])
-            self.rising_score_rect_list[score].y -= 1
-            self.rising_score_frame_list[score] -= 1
-            if self.rising_score_frame_list[score] <= 0:
-                self.rising_score_index -= 1
-                del self.rising_score_rect_list[score]
-                del self.rising_score_value_list[score]
-                del self.rising_score_frame_list[score]
+        try:
+            for score in range(self.rising_score_index):
+                rising_score_to_text = self.font.render(str(self.rising_score_value_list[score]), True, (255, 255, 255))
+                self.screen.blit(rising_score_to_text, self.rising_score_rect_list[score])
+                self.rising_score_rect_list[score].y -= 1
+                self.rising_score_frame_list[score] -= 1
+                if self.rising_score_frame_list[score] <= 0:
+                    self.rising_score_index -= 1
+                    del self.rising_score_rect_list[score]
+                    del self.rising_score_value_list[score]
+                    del self.rising_score_frame_list[score]
+        except IndexError:
+            pass

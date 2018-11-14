@@ -44,8 +44,8 @@ class GameFunctions:
         self.coin_timer -= self.dt
         if self.coin_timer < 0:
             self.coin_timer = 1
-            for coin in coins:
-                coin.change_index()
+            for c in coins:
+                c.change_index()
 
         self.time_timer -= self.dt
         if self.time_timer < 0:
@@ -60,7 +60,7 @@ class GameFunctions:
 
     @staticmethod
     def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats):
-        ##BLOCKS
+        # BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
             pass
@@ -82,7 +82,7 @@ class GameFunctions:
             mario.jumpFlag = "None"
             stats.score_progression_index = 0
             return
-        ##FLOOR
+        # FLOOR
         if mario.vector.y_velocity >= 0:
             index = mario.rect.collidelist(floor[begin:end])
             if index == -1:
@@ -93,7 +93,7 @@ class GameFunctions:
                 mario.jumpFlag = "None"
                 stats.score_progression_index = 0
                 return
-        ##BRICKS
+        # BRICKS
         index = mario.rect.collidelist(bricks)
         if index == -1:
             pass
@@ -108,7 +108,7 @@ class GameFunctions:
             mario.jumpFlag = "None"
             stats.score_progression_index = 0
             return
-        ##GOOMBAS
+        # GOOMBAS
         index = mario.rect.collidelist(goombas)
         if index == -1:
             pass
@@ -128,13 +128,13 @@ class GameFunctions:
             goombas[index].rect.y -= 28
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
-            mario.jump()
-        ##KOOPAS
+            mario.jump_small()
+        # KOOPAS
         index = mario.rect.collidelist(koopas)
         if index == -1:
             pass
         elif koopas[index].dead:
-             pass
+            pass
         elif mario.jumpFlag == "falling":
             stats.score += stats.score_progression[stats.score_progression_index]
             stats.rising_score_value_list.append(stats.score_progression[stats.score_progression_index])
@@ -175,7 +175,8 @@ class GameFunctions:
             mario.vector.x_velocity = 0
 
     @staticmethod
-    def blit_objects(mario, bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags, castles):
+    def blit_objects(mario, bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags,
+                     castles):
         for obj in bricks:
             obj.blit()
         for obj in blocks:
@@ -210,7 +211,8 @@ class GameFunctions:
                                     flags, castles, goombas, koopas)
         GameFunctions.check_left_collisions(blocks, bricks, mario)
         mario.update_y()
-        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor, goombas, koopas, mario, sound_library, stats)
+        GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor,
+                                              goombas, koopas, mario, sound_library, stats)
         return background
 
     @staticmethod
@@ -226,7 +228,6 @@ class GameFunctions:
         for obj in coins:
             obj.blit()
 
-
     @staticmethod
     def check_events(mario, sound_lib, stats, overworld_flag):
         for event in pygame.event.get():
@@ -237,6 +238,7 @@ class GameFunctions:
                 GameFunctions.check_keydown_events(event, mario, sound_lib, stats, overworld_flag)
             elif event.type == pygame.KEYUP:
                 GameFunctions.check_keyup_events(event, mario)
+
     @staticmethod
     def check_keydown_events(event2, mario, sound_lib, stats, overworld_flag):
         if event2.key == pygame.K_RIGHT and mario.vector.x_velocity < 1:
@@ -269,7 +271,6 @@ class GameFunctions:
                                 sound_lib[0][2].play(-1)
                             if stats.time <= 250 and overworld_flag:
                                 sound_lib[0][3].play(-1)
-
 
     @staticmethod
     def check_keyup_events(event, mario):
@@ -394,19 +395,30 @@ class GameFunctions:
             coin_list.append(new_coin)
         return coin_list
 
-    def load_sound_library(self):
-        track_lib = [pygame.mixer.Sound('sounds/smb_overworld.wav'), pygame.mixer.Sound('sounds/smb_hurry_overworld.wav'), pygame.mixer.Sound('sounds/smb_underworld.wav'),
-                     pygame.mixer.Sound('sounds/smb_hurry_underworld.wav'), pygame.mixer.Sound('sounds/smb_starman.wav')]
-        effects_lib = [pygame.mixer.Sound('sounds/smb_1-up.wav'), pygame.mixer.Sound('sounds/smb_breakblock.wav'), pygame.mixer.Sound('sounds/smb_bump.wav'),
-                       pygame.mixer.Sound('sounds/smb_coin.wav'), pygame.mixer.Sound('sounds/smb_fireball.wav'), pygame.mixer.Sound('sounds/smb_fireworks.wav'),
-                       pygame.mixer.Sound('sounds/smb_flagpole.wav'), pygame.mixer.Sound('sounds/smb_gameover.wav'), pygame.mixer.Sound('sounds/smb_jump-small.wav'),
-                       pygame.mixer.Sound('sounds/smb_jump-super.wav'), pygame.mixer.Sound('sounds/smb_kick.wav'), pygame.mixer.Sound('sounds/smb_mariodie.wav'),
-                       pygame.mixer.Sound('sounds/smb_pause.wav'), pygame.mixer.Sound('sounds/smb_pipe.wav'), pygame.mixer.Sound('sounds/smb_powerup.wav'),
-                       pygame.mixer.Sound('sounds/smb_powerup_appears.wav'), pygame.mixer.Sound('sounds/smb_stage_clear.wav'), pygame.mixer.Sound('sounds/smb_stomp.wav'),
+    @staticmethod
+    def load_sound_library():
+        track_lib = [pygame.mixer.Sound('sounds/smb_overworld.wav'),
+                     pygame.mixer.Sound('sounds/smb_hurry_overworld.wav'),
+                     pygame.mixer.Sound('sounds/smb_underworld.wav'),
+                     pygame.mixer.Sound('sounds/smb_hurry_underworld.wav'),
+                     pygame.mixer.Sound('sounds/smb_starman.wav')]
+        effects_lib = [pygame.mixer.Sound('sounds/smb_1-up.wav'),
+                       pygame.mixer.Sound('sounds/smb_breakblock.wav'),
+                       pygame.mixer.Sound('sounds/smb_bump.wav'),
+                       pygame.mixer.Sound('sounds/smb_coin.wav'),
+                       pygame.mixer.Sound('sounds/smb_fireball.wav'), pygame.mixer.Sound('sounds/smb_fireworks.wav'),
+                       pygame.mixer.Sound('sounds/smb_flagpole.wav'), pygame.mixer.Sound('sounds/smb_gameover.wav'),
+                       pygame.mixer.Sound('sounds/smb_jump-small.wav'),
+                       pygame.mixer.Sound('sounds/smb_jump-super.wav'), pygame.mixer.Sound('sounds/smb_kick.wav'),
+                       pygame.mixer.Sound('sounds/smb_mariodie.wav'),
+                       pygame.mixer.Sound('sounds/smb_pause.wav'), pygame.mixer.Sound('sounds/smb_pipe.wav'),
+                       pygame.mixer.Sound('sounds/smb_powerup.wav'),
+                       pygame.mixer.Sound('sounds/smb_powerup_appears.wav'),
+                       pygame.mixer.Sound('sounds/smb_stage_clear.wav'), pygame.mixer.Sound('sounds/smb_stomp.wav'),
                        pygame.mixer.Sound('sounds/smb_warning.wav')]
-        self.sound_lib = [track_lib, effects_lib]
+        sound_lib = [track_lib, effects_lib]
 
-        return self.sound_lib
+        return sound_lib
 
     @staticmethod
     def load_image_library():
@@ -420,7 +432,8 @@ class GameFunctions:
         for index, img in enumerate(mystery_lib):
             mystery_lib[index] = pygame.transform.scale(img, (56, 56))
 
-        flag_lib = [pygame.image.load('images/fg/flag.png'), pygame.image.load('images/bg/pole.png'), pygame.image.load('images/bg/castle.png')]
+        flag_lib = [pygame.image.load('images/fg/flag.png'), pygame.image.load('images/bg/pole.png'),
+                    pygame.image.load('images/bg/castle.png')]
         flag_lib[1] = pygame.transform.scale(flag_lib[1], (56, 560))
         flag_lib[2] = pygame.transform.scale(flag_lib[2], (280, 280))
 
