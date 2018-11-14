@@ -211,9 +211,8 @@ class GameFunctions:
             stats.score_progression_index = 0
             return
 
-
-    @staticmethod
-    def check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas):
+    def check_left_collisions(self, blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas,
+                              sound_library, stats):
         # mario x blocks
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -270,10 +269,24 @@ class GameFunctions:
         else:
             mario.rect.left = largepipes[index].rect.right
             mario.vector.x_velocity = 0
+        # mario x goombas
+        index = mario.rect.collidelist(goombas)
+        if index <= -1:
+            pass
+        elif mario.rect.bottom > goombas[index].rect.top and not goombas[index].dead:
+            print("goomba kill mario")
+            self.mario_death(stats, sound_library, mario)
+        # mario x koopas
+        index = mario.rect.collidelist(koopas)
+        if index <= -1:
+            pass
+        elif mario.rect.bottom > koopas[index].rect.top:
+            print("koopa klil mario")
+            self.mario_death(stats, sound_library, mario)
         # goomba x pipes
         for goomba in goombas:
             if goomba.rect.x > 0:
-                #small
+                # small
                 index = goomba.rect.collidelist(smallpipes)
                 if index <= -1:
                     pass
@@ -348,7 +361,8 @@ class GameFunctions:
                      castles, goombas, koopas, sound_library, stats):
         background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
                                     flags, castles)
-        self.check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas)
+        self.check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas,
+                                   sound_library, stats)
         mario.update_y()
         if mario.rect.y > 896:
             self.mario_death(stats, sound_library, mario)
