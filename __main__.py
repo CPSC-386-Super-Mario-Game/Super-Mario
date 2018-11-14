@@ -75,7 +75,7 @@ class Main:
             #                                   self.settings,
             #                                   self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1])
             while not self.gF.finished:
-                self.gF.check_events(self.mario)
+                self.gF.check_events(self.mario, self.sound_library, self.stats, self.gF.overworld_flag)
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
                                                        self.mario, self.solid_rects, self.smallpipe_rects,
                                                        self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,

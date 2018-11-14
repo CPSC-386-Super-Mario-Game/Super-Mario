@@ -228,25 +228,48 @@ class GameFunctions:
 
 
     @staticmethod
-    def check_events(mario):
+    def check_events(mario, sound_lib, stats, overworld_flag):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
-                GameFunctions.check_keydown_events(event, mario)
+                stats = stats
+                GameFunctions.check_keydown_events(event, mario, sound_lib, stats, overworld_flag)
             elif event.type == pygame.KEYUP:
                 GameFunctions.check_keyup_events(event, mario)
-
     @staticmethod
-    def check_keydown_events(event, mario):
-        if event.key == pygame.K_RIGHT and mario.vector.x_velocity < 1:
+    def check_keydown_events(event2, mario, sound_lib, stats, overworld_flag):
+        if event2.key == pygame.K_RIGHT and mario.vector.x_velocity < 1:
             mario.change_direction("right")
-        elif event.key == pygame.K_LEFT and mario.vector.x_velocity > -1:
+        elif event2.key == pygame.K_LEFT and mario.vector.x_velocity > -1:
             mario.change_direction("left")
-        elif event.key == pygame.K_UP or event.key == pygame.K_SPACE:
+        elif event2.key == pygame.K_UP or event2.key == pygame.K_SPACE:
             mario.jump()
-        elif event.key == pygame.K_q:
+        elif event2.key == pygame.K_q:
             sys.exit()
+        elif event2.key == pygame.K_p:
+            pygame.mixer.set_num_channels(0)
+            pygame.mixer.set_num_channels(8)
+            sound_lib[1][12].play()
+            pause_flag = True
+            while pause_flag:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_q:
+                            sys.exit()
+                        elif event.key == pygame.K_p:
+                            pause_flag = False
+                            if stats.time > 250 and not overworld_flag:
+                                sound_lib[0][0].play(-1)
+                            if stats.time <= 250 and not overworld_flag:
+                                sound_lib[0][1].play(-1)
+                            if stats.time > 250 and overworld_flag:
+                                sound_lib[0][2].play(-1)
+                            if stats.time <= 250 and overworld_flag:
+                                sound_lib[0][3].play(-1)
+
 
     @staticmethod
     def check_keyup_events(event, mario):
