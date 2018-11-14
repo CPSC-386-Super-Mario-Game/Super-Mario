@@ -49,7 +49,7 @@ class Goomba(Sprite):
                 self.dead_counter += 1
         elif self.moving_right and self.rect.right < self.screen_rect.right:
             self.center_x += self.speed_factor
-        elif self.moving_left:
+        elif self.moving_left and self.rect.left > 0:
             self.center_x -= self.speed_factor
             if self.rect.left < -150:
                 return True

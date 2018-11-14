@@ -96,6 +96,10 @@ class Main:
             self.sound_library[0][0].play(-1)
             while not self.gF.finished:
                 self.gF.check_events(self.mario, self.sound_library, self.stats, self.gF.overworld_flag)
+                for goomba in self.goombas:
+                    goomba.update(self.mario)
+                for koopa in self.koopas:
+                    koopa.update(self.mario)
                 self.background = self.gF.update_mario(self.background, self.blocks, self.bricks, self.floor_rects,
                                                        self.mario, self.solid_rects, self.smallpipe_rects,
                                                        self.mediumpipe_rects, self.largepipe_rects, self.flag_rects,

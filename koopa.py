@@ -44,7 +44,7 @@ class Koopa(Sprite):
         if mario.rect.x >= self.settings.screenWidth / 2 and mario.vector.x_velocity > 0:
             self.center_x -= mario.vector.x_velocity
         if self.dead:
-            self.image = self.images[4]
+            self.image = self.images[5]
             if self.dead_counter == 600:
                 self.center_y -= 28
                 self.speed_factor = 1
@@ -57,7 +57,7 @@ class Koopa(Sprite):
                 self.dead_counter += 1
             else:
                 self.dead_counter += 1
-        if self.moving_right and self.rect.right < self.screen_rect.right:
+        if self.moving_right:
             self.center_x += self.speed_factor
         elif self.moving_left:
             self.center_x -= self.speed_factor
@@ -73,10 +73,8 @@ class Koopa(Sprite):
         if self.dead:
             pass
         elif self.direction_left:
-            self.image = self.images[2]
             self.lr = 2
         else:
-            self.image = self.images[0]
             self.lr = 0
         self.direction_left = not self.direction_left
 
@@ -97,3 +95,4 @@ class Koopa(Sprite):
     def change_direction(self):
         self.moving_left = not self.moving_left
         self.moving_right = not self.moving_right
+        self.flip_img()

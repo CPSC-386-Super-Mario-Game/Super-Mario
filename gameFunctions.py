@@ -65,7 +65,7 @@ class GameFunctions:
         self.dt = self.timer.tick(144) / 144
 
     @staticmethod
-    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats):
+    def check_bottom_collisions(begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes, largepipes):
         # BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -157,9 +157,56 @@ class GameFunctions:
             mario.vector.y_velocity = 0
             mario.jumpFlag = "None"
             mario.jump()
+        # MARIO X SMALLPIPE
+        index = mario.rect.collidelist(smallpipes)
+        if index == -1:
+            pass
+        elif mario.vector.y_velocity < 0:
+            mario.rect.top = smallpipes[index].rect.bottom + 7
+            mario.vector.y_velocity = 1.5
+            mario.jumpFlag = "falling"
+            return
+        else:
+            mario.vector.y_velocity = 0
+            mario.rect.bottom = smallpipes[index].rect.top - 1
+            mario.jumpFlag = "None"
+            stats.score_progression_index = 0
+            return
+        # MARIO X MEDIUMPIPE
+        index = mario.rect.collidelist(mediumpipes)
+        if index == -1:
+            pass
+        elif mario.vector.y_velocity < 0:
+            mario.rect.top = mediumpipes[index].rect.bottom + 7
+            mario.vector.y_velocity = 1.5
+            mario.jumpFlag = "falling"
+            return
+        else:
+            mario.vector.y_velocity = 0
+            mario.rect.bottom = mediumpipes[index].rect.top - 1
+            mario.jumpFlag = "None"
+            stats.score_progression_index = 0
+            return
+        # MARIO X LARGEPIPE
+        index = mario.rect.collidelist(largepipes)
+        if index == -1:
+            pass
+        elif mario.vector.y_velocity < 0:
+            mario.rect.top = largepipes[index].rect.bottom + 7
+            mario.vector.y_velocity = 1.5
+            mario.jumpFlag = "falling"
+            return
+        else:
+            mario.vector.y_velocity = 0
+            mario.rect.bottom = largepipes[index].rect.top - 1
+            mario.jumpFlag = "None"
+            stats.score_progression_index = 0
+            return
+
 
     @staticmethod
-    def check_left_collisions(blocks, bricks, mario):
+    def check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas):
+        # mario x blocks
         index = mario.rect.collidelist(blocks)
         if index == -1:
             pass
@@ -169,7 +216,7 @@ class GameFunctions:
         else:
             mario.rect.left = blocks[index].rect.right + 1
             mario.vector.x_velocity = 0
-
+        # mario x bricks
         index = mario.rect.collidelist(bricks)
         if index == -1:
             pass
@@ -179,6 +226,85 @@ class GameFunctions:
         else:
             mario.rect.left = bricks[index].rect.right
             mario.vector.x_velocity = 0
+        # mario x smallpipe
+        index = mario.rect.collidelist(smallpipes)
+        if index <= -1:
+            pass
+        elif mario.rect.x - smallpipes[index].rect.x == 0:
+            pass
+        elif mario.rect.x - smallpipes[index].rect.x < 0:
+            mario.rect.right = smallpipes[index].rect.left
+            mario.vector.x_velocity = 0
+        else:
+            mario.rect.left = smallpipes[index].rect.right
+            mario.vector.x_velocity = 0
+        # mario x mediumpipe
+        index = mario.rect.collidelist(mediumpipes)
+        if index <= -1:
+            pass
+        elif mario.rect.x - mediumpipes[index].rect.x == 0:
+            pass
+        elif mario.rect.x - mediumpipes[index].rect.x < 0:
+            mario.rect.right = mediumpipes[index].rect.left
+            mario.vector.x_velocity = 0
+        else:
+            mario.rect.left = mediumpipes[index].rect.right
+            mario.vector.x_velocity = 0
+        # mario x largepipes
+        index = mario.rect.collidelist(largepipes)
+        if index <= -1:
+            pass
+        elif mario.rect.x - largepipes[index].rect.x == 0:
+            pass
+        elif mario.rect.x - largepipes[index].rect.x < 0:
+            mario.rect.right = largepipes[index].rect.left
+            mario.vector.x_velocity = 0
+        else:
+            mario.rect.left = largepipes[index].rect.right
+            mario.vector.x_velocity = 0
+        # goomba x pipes
+        for goomba in goombas:
+            if goomba.rect.x > 0:
+                #small
+                index = goomba.rect.collidelist(smallpipes)
+                if index <= -1:
+                    pass
+                else:
+                    goomba.change_direction()
+                # medium
+                index = goomba.rect.collidelist(mediumpipes)
+                if index <= -1:
+                    pass
+                else:
+                    goomba.change_direction()
+                # large
+                index = goomba.rect.collidelist(largepipes)
+                if index <= -1:
+                    pass
+                else:
+                    goomba.change_direction()
+        # koopa x pipes
+        for koopa in koopas:
+            if koopa.rect.x > 0:
+                # small
+                index = koopa.rect.collidelist(smallpipes)
+                if index == -1:
+                    pass
+                else:
+                    koopa.change_direction()
+                # medium
+                index = koopa.rect.collidelist(mediumpipes)
+                if index == -1:
+                    pass
+                else:
+                    koopa.change_direction()
+                # large
+                index = koopa.rect.collidelist(largepipes)
+                if index == -1:
+                    pass
+                else:
+                    koopa.change_direction()
+
 
     @staticmethod
     def blit_objects(mario, bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags,
@@ -188,15 +314,15 @@ class GameFunctions:
         for obj in blocks:
             obj.blit()
         for obj in goombas:
-            obj.blitme()
-            if obj.update(mario):
+            if obj.rect.x < -100 or obj.dead_counter > 59:
                 goombas.remove(obj)
                 print("dead goomba")
-        for obj in koopas:
             obj.blitme()
-            if obj.update(mario):
+        for obj in koopas:
+            if obj.rect.x < -100:
                 koopas.remove(obj)
                 print("dead koopa")
+            obj.blitme()
         for obj in solids:
             obj.blit()
         for obj in smallpipes:
@@ -215,10 +341,11 @@ class GameFunctions:
                      castles, goombas, koopas, sound_library, stats):
         background = mario.update_x(background, floor, bricks, blocks, solids, smallpipes, mediumpipes, largepipes,
                                     flags, castles)
-        GameFunctions.check_left_collisions(blocks, bricks, mario)
+        GameFunctions.check_left_collisions(blocks, bricks, smallpipes, mediumpipes, largepipes, mario, goombas, koopas)
         mario.update_y()
         GameFunctions.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor,
-                                              goombas, koopas, mario, sound_library, stats)
+                                              goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes,
+                                              largepipes)
         return background
 
     @staticmethod

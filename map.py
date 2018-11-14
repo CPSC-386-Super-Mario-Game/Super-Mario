@@ -81,15 +81,24 @@ class Map:
                         copy.left = copy.right
                     elif flag == "u":
                         map_row.append(flag)
-                        self.smallpipe_rect.append(copy.copy())
+                        temp = copy.copy()
+                        temp.width = 116
+                        temp.height = 96
+                        self.smallpipe_rect.append(temp)
                         copy.left = copy.right
                     elif flag == "U":
                         map_row.append(flag)
-                        self.mediumpipe_rect.append(copy.copy())
+                        temp = copy.copy()
+                        temp.width = 116
+                        temp.height = 300
+                        self.mediumpipe_rect.append(temp)
                         copy.left = copy.right
                     elif flag == "w":
                         map_row.append(flag)
-                        self.largepipe_rect.append(copy.copy())
+                        temp = copy.copy()
+                        temp.width = 116
+                        temp.height = 300
+                        self.largepipe_rect.append(temp)
                         copy.left = copy.right
                     elif flag == "f":
                         map_row.append(flag)
