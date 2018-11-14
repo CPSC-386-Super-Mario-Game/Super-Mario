@@ -1,5 +1,5 @@
 import vector
-import background
+import pygame
 
 
 class Mario:
@@ -7,32 +7,26 @@ class Mario:
         self.screen = screen
         self.settings = settings
         self.sound_library = sound_library
-        self.original_x = x
-        self.original_y = y
-        self.vector = vector.Vector(settings)
         self.regular_img_lib = image_lib[0]
         self.invul_img_lib = image_lib[1]
 
+        self.walkIndex = 4
+        self.walkInc = 1
+
+        self.original_x = x
+        self.original_y = y
         self.x = x
         self.y = y
-        self.image = self.regular_img_lib[0]
-        self.rect = self.image.get_rect()
+
+        self.vector = vector.Vector(settings)
+        self.blitIndex = 0
+        self.rect = self.regular_img_lib[0].get_rect()
         self.rect.x = x
         self.rect.y = y
 
         self.x_direction = "none"
         self.jumpFlag = "none"
-
-    def update(self):
-        self.vector.update_x_velocity(self.x_direction)
-        self.vector.update_y_velocity(self.jumpFlag)
-        self.x += self.vector.x_velocity
-        self.y += self.vector.y_velocity
-        if self.y >= 800:
-            self.jumpFlag = "none"
-            self.vector.y_velocity = 0
-        self.rect.x = self.x
-        self.rect.y = self.y
+        self.flipped = False
 
     def update_x(self, bg, floor_rects, brick_rects, block_rects, solid_rects, smallpipe_rects,
                  mediumpipe_rects, largepipe_rects, flag_rects, castle_rects):
@@ -95,7 +89,44 @@ class Mario:
         self.vector.jump_small()
 
     def blit(self):
-        self.screen.blit(self.image, self.rect)
+        if self.jumpFlag == "jumping" or self.jumpFlag == "falling":
+            self.blitIndex = 2
+        elif self.x_direction == "right" and self.vector.x_velocity < 0 or \
+                self.x_direction == "left" and self.vector.x_velocity > 0:
+            self.blitIndex = 1
+        elif abs(self.vector.x_velocity) > 0:
+            self.screen.blit(self.regular_img_lib[self.walkIndex], self.rect)
+            return
+        else:
+            self.blitIndex = 0
+        self.screen.blit(self.regular_img_lib[self.blitIndex], self.rect)
+
+    def change_index(self):
+        if self.walkIndex == 3 or self.walkIndex == 5:
+            self.walkInc *= -1
+        self.walkIndex += self.walkInc
+
+    def flip_direction(self):
+        if not self.flipped:
+            for i in range(0, 6):
+                self.regular_img_lib[i] = pygame.transform.flip(self.regular_img_lib[i], True, False)
+                self.flipped = True
+
+    def flip_back(self):
+        if self.flipped:
+            for i in range(0, 6):
+                self.regular_img_lib[i] = pygame.transform.flip(self.regular_img_lib[i], True, False)
+                self.flipped = False
+    '''
+        small_lib = [pygame.image.load('images/mario/small_idle.png'),
+                     pygame.image.load('images/mario/small_turn.png'),
+                     pygame.image.load('images/mario/small_jump.png'),
+                     pygame.image.load('images/mario/small_walk0.png'),
+                     pygame.image.load('images/mario/small_walk1.png'),
+                     pygame.image.load('images/mario/small_walk2.png'),
+                     pygame.image.load('images/mario/small_die.png'),
+                     pygame.image.load('images/mario/small_grow.png')]
+    '''
 
 
 class SmallMario(Mario):

@@ -19,15 +19,21 @@ class GameFunctions:
         self.koopa_timer = 2
         self.coin_timer = 1
         self.time_timer = 8
+        self.mario_timer = 2
 
         self.overworld_flag = False
 
-    def check_time(self, blocks, goombas, koopas, coins, stats, sound_library):
+    def check_time(self, blocks, goombas, koopas, mario, coins, stats, sound_library):
         self.block_timer -= self.dt
         if self.block_timer < 0:
             self.block_timer = 1
             for block in blocks:
                 block.change_index()
+
+        self.mario_timer -= self.dt
+        if self.mario_timer < 0:
+            self.mario_timer = 2
+            mario.change_index()
 
         self.goomba_timer -= self.dt
         if self.goomba_timer < 0:
@@ -243,8 +249,10 @@ class GameFunctions:
     def check_keydown_events(event2, mario, sound_lib, stats, overworld_flag):
         if event2.key == pygame.K_RIGHT and mario.vector.x_velocity < 1:
             mario.change_direction("right")
+            mario.flip_back()
         elif event2.key == pygame.K_LEFT and mario.vector.x_velocity > -1:
             mario.change_direction("left")
+            mario.flip_direction()
         elif event2.key == pygame.K_UP or event2.key == pygame.K_SPACE:
             mario.jump()
         elif event2.key == pygame.K_q:

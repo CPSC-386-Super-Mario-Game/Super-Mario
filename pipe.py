@@ -15,6 +15,7 @@ class LeftPipe:
     def update_x_coor(self, speed):
         self.rect.x += speed
 
+
 class HugePipe:
     def __init__(self, image_library, rect, screen, settings):
         self.screen = screen
@@ -31,6 +32,7 @@ class HugePipe:
 
     def update_x_coor(self, speed):
         self.rect.x += speed
+
 
 class SmallPipe:
     def __init__(self, image_library, rect, screen, settings):
@@ -49,6 +51,7 @@ class SmallPipe:
     def update_x_coor(self, speed):
         self.rect.x += speed
 
+
 class MediumPipe:
     def __init__(self, image_library, rect, screen, settings):
         self.screen = screen
@@ -65,6 +68,7 @@ class MediumPipe:
 
     def update_x_coor(self, speed):
         self.rect.x += speed
+
 
 class LargePipe:
     def __init__(self, image_library, rect, screen, settings):

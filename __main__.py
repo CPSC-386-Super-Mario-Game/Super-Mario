@@ -105,7 +105,7 @@ class Main:
                 self.mario.blit()
                 pygame.display.flip()
 
-                self.gF.check_time(self.blocks, self.goombas, self.koopas, self.ug_coins, self.stats,
+                self.gF.check_time(self.blocks, self.goombas, self.koopas, self.mario, self.ug_coins, self.stats,
                                    self.sound_library)
                 self.clock.tick(self.settings.FPS)                                     # Locks game at designated FPS
 
