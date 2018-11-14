@@ -403,6 +403,20 @@ class GameFunctions:
             coin_list.append(new_coin)
         return coin_list
 
+    def game_over(self, stats):
+        self.finished = True
+        stats.lives = 3
+        if stats.score > stats.high_score:
+            stats.high_score = stats.score
+            file = open('highscore.txt', 'w')
+            file.write(str(stats.high_score))
+            file.close()
+
+        stats.score = 0
+        stats.time = 1000
+        stats.coins = 0
+
+
     @staticmethod
     def load_sound_library():
         track_lib = [pygame.mixer.Sound('sounds/smb_overworld.wav'),
