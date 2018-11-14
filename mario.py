@@ -70,7 +70,7 @@ class Mario:
         else:
             self.x += self.vector.x_velocity
             self.rect.x = self.x
-        return background
+        return bg
 
     def update_y(self):
         self.vector.update_y_velocity(self.jumpFlag)
