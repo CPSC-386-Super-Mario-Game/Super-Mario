@@ -84,14 +84,25 @@ class MysteryBrick(Brick):
         self.power_up = None
         self.index = 0
         self.indexInc = 1
+        self.coin_lib = None
+        self.coin_rect = None
 
         self.consumed = False
         self.gen_coin = False
+        self.coinInc = 0
+        self.coinCounter = -1
 
     def blit(self):
         if self.rect.right < 0 or self.rect.left > self.settings.screenWidth:
             return
         self.screen.blit(self.img_lib[self.index], self.rect)
+        if self.gen_coin:
+            self.screen.blit(self.coin_lib[self.index], self.coin_rect)
+            self.coin_rect.y = self.rect.y + self.coinInc - 56
+            self.coinInc += self.coinCounter
+            if self.coinInc < -20:
+                self.gen_coin = False
+                self.consumed = True
 
     def change_index(self):
         if not self.consumed:
@@ -100,6 +111,10 @@ class MysteryBrick(Brick):
                 self.indexInc *= -1
         else:
             self.index = 3
+        if self.gen_coin:
+            self.index += self.indexInc
+            if self.index == 0 or self.index == 2:
+                self.indexInc *= -1
 
     def set_powerup(self, powerup):
         self.power_up = powerup
@@ -107,3 +122,9 @@ class MysteryBrick(Brick):
     def create_powerup(self):
         if self.power_up == "coin":
             self.gen_coin = True
+            self.coin_rect.x = self.rect.x
+            self.coin_rect.y = self.rect.y - 56
+
+    def set_coin_lib(self, lib):
+        self.coin_lib = lib
+        self.coin_rect = self.coin_lib[0].get_rect()

@@ -647,6 +647,8 @@ class GameFunctions:
         brick_coin_lib = [pygame.image.load('images/fg/brick_coin0.png'),
                           pygame.image.load('images/fg/brick_coin1.png'),
                           pygame.image.load('images/fg/brick_coin2.png')]
+        for index, img in enumerate(brick_coin_lib):
+            brick_coin_lib[index] = pygame.transform.scale(img, (28, 49))
 
         coin_lib = [pygame.image.load('images/fg/coin0.png'), pygame.image.load('images/fg/coin1.png'),
                     pygame.image.load('images/fg/coin2.png'), pygame.image.load('images/fg/coin3.png')]

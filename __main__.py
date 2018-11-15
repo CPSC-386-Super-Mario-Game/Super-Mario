@@ -35,6 +35,8 @@ class Main:
         self.bricks = self.gF.load_brick_objects(self.image_library[1], self.map.brick_rect, self.screen, self.settings)
         self.blocks = self.gF.load_block_objects(self.image_library[2], self.map.mystery_rect, self.screen,
                                                  self.settings)
+        for block in self.blocks:
+            block.set_coin_lib(self.image_library[6])
         self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
                                                    self.settings, self.sound_library)
         self.koopas = self.gF.load_koopa_objects(self.image_library[18], self.map.koopa_coor, self.screen,
@@ -156,6 +158,8 @@ class Main:
         self.bricks = self.gF.load_brick_objects(self.image_library[1], self.map.brick_rect, self.screen, self.settings)
         self.blocks = self.gF.load_block_objects(self.image_library[2], self.map.mystery_rect, self.screen,
                                                  self.settings)
+        for block in self.blocks:
+            block.set_coin_lib(self.image_library[6])
         self.goombas = self.gF.load_goomba_objects(self.image_library[17], self.map.goomba_rect, self.screen,
                                                    self.settings, self.sound_library)
         self.koopas = self.gF.load_koopa_objects(self.image_library[18], self.map.koopa_coor, self.screen,
