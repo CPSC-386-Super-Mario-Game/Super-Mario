@@ -27,6 +27,7 @@ class Mario:
         self.x_direction = "none"
         self.jumpFlag = "none"
         self.flipped = False
+        self.dead = False
 
     def update_x(self, bg, floor_rects, brick_rects, block_rects, solid_rects, smallpipe_rects,
                  mediumpipe_rects, largepipe_rects, flag_rects, castle_rects):
@@ -89,7 +90,9 @@ class Mario:
         self.vector.jump_small()
 
     def blit(self):
-        if self.jumpFlag == "jumping" or self.jumpFlag == "falling":
+        if self.dead:
+            self.blitIndex = 6
+        elif self.jumpFlag == "jumping" or self.jumpFlag == "falling":
             self.blitIndex = 2
         elif self.x_direction == "right" and self.vector.x_velocity < 0 or \
                 self.x_direction == "left" and self.vector.x_velocity > 0:
@@ -120,6 +123,7 @@ class Mario:
 
     def die(self):
         self.blitIndex = 6
+
     '''
         small_lib = [pygame.image.load('images/mario/small_idle.png'),
                      pygame.image.load('images/mario/small_turn.png'),

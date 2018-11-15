@@ -21,6 +21,7 @@ class GameFunctions:
         self.coin_timer = 1
         self.time_timer = 8
         self.mario_timer = 2
+        self.incBrickTimer = 0.1
 
         self.death_flag = False
         self.game_over_flag = False
@@ -28,12 +29,20 @@ class GameFunctions:
         self.on_warp_pipe = False
         self.warp_underworld = False
 
-    def check_time(self, blocks, goombas, koopas, mario, coins, stats, sound_library):
+    def check_time(self, blocks, bricks, goombas, koopas, mario, coins, stats, sound_library):
         self.block_timer -= self.dt
         if self.block_timer < 0:
             self.block_timer = 1
             for block in blocks:
                 block.change_index()
+
+        for b in bricks:
+            if b.incFlag:
+                self.incBrickTimer -= self.dt
+                if self.incBrickTimer < 0:
+                    self.incBrickTimer = 0.1
+                    b.change_rect()
+                break
 
         self.mario_timer -= self.dt
         if self.mario_timer < 0:
@@ -69,7 +78,8 @@ class GameFunctions:
 
         self.dt = self.timer.tick(144) / 144
 
-    def check_bottom_collisions(self, begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes, largepipes):
+    def check_bottom_collisions(self, begin, blocks, bricks, end, floor, goombas, koopas, mario, sound_library, stats,
+                                smallpipes, mediumpipes, largepipes):
         # BLOCKS
         index = mario.rect.collidelist(blocks)
         if index == -1:
@@ -82,9 +92,10 @@ class GameFunctions:
             elif mario.rect.left - blocks[index].rect.right > -20:
                 mario.rect.left = blocks[index].rect.right
                 return
-            mario.rect.top = blocks[index].rect.bottom
+            mario.rect.top = blocks[index].rect.bottom + 7
             mario.vector.y_velocity = 1.5
             mario.jumpFlag = "falling"
+            blocks[index].create_powerup()
             return
         elif mario.vector.y_velocity >= 0:
             mario.vector.y_velocity = 0
@@ -111,6 +122,7 @@ class GameFunctions:
             mario.rect.top = bricks[index].rect.bottom + 7
             mario.vector.y_velocity = 1.5
             mario.jumpFlag = "falling"
+            bricks[index].create_powerup()
             return
         else:
             mario.vector.y_velocity = 0
@@ -326,9 +338,8 @@ class GameFunctions:
                 else:
                     koopa.change_direction()
 
-
     @staticmethod
-    def blit_objects(mario, bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags,
+    def blit_objects(bricks, blocks, goombas, koopas, solids, smallpipes, mediumpipes, largepipes, flags,
                      castles):
         for obj in bricks:
             obj.blit()
@@ -367,8 +378,8 @@ class GameFunctions:
         if mario.rect.y > 896:
             self.mario_death(stats, sound_library, mario)
         self.check_bottom_collisions(background.floor_begin, blocks, bricks, background.floor_end, floor,
-                                              goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes,
-                                              largepipes)
+                                     goombas, koopas, mario, sound_library, stats, smallpipes, mediumpipes,
+                                     largepipes)
         return background
 
     @staticmethod
@@ -470,6 +481,7 @@ class GameFunctions:
         block_list = []
         for rect in rect_list:
             new_block = brick.MysteryBrick(image_library, rect, screen, settings)
+            new_block.set_powerup("coin")
             block_list.append(new_block)
         return block_list
 
@@ -573,13 +585,18 @@ class GameFunctions:
         stats.time = 1000
         pygame.mixer.set_num_channels(0)
         pygame.mixer.set_num_channels(8)
+        mario.dead = True
+        mario.blit()
+        pygame.display.flip()
         sound_library[1][11].play()
         time.sleep(3)
 
         self.death_flag = True
+        if mario.flipped:
+            mario.flip_back()
+        mario.dead = False
         if stats.lives == 0:
             self.game_over(stats, sound_library)
-
 
     @staticmethod
     def load_sound_library():

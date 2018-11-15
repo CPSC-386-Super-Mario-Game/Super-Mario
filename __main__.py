@@ -80,14 +80,15 @@ class Main:
             else:
                 self.mario = mario.SmallMario([self.image_library[15], self.image_library[16]], self.screen,
                                               self.settings,
-                                              self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1], self.sound_library)
+                                              self.ugmap.mario_coor[0][0], self.ugmap.mario_coor[0][1],
+                                              self.sound_library)
             pygame.mouse.set_visible(True)
             mloop = MenuLoop(self.screen, self.stats, finished=False, highscore_screen=False)
             while not mloop.finished:
                 mloop.check_events()
                 mloop.update()
                 self.update_menu_screen(mloop)
-                if mloop.highscore_screen == True:
+                if mloop.highscore_screen:
                     while mloop.highscore_screen:
                         mloop.check_highscore_events()
                         mloop.update_highscore_screen()
@@ -117,7 +118,7 @@ class Main:
                                                            self.stats)
                     self.background.blit()
                     self.stats.blit_score()
-                    self.gF.blit_objects(self.mario, self.bricks, self.blocks, self.goombas, self.koopas,
+                    self.gF.blit_objects(self.bricks, self.blocks, self.goombas, self.koopas,
                                          self.solid_rects, self.smallpipe_rects, self.mediumpipe_rects,
                                          self.largepipe_rects, self.flag_rects, self.castle_rects)
                     for floor in self.floor_rects:
@@ -133,8 +134,8 @@ class Main:
                 self.mario.blit()
                 pygame.display.flip()
 
-                self.gF.check_time(self.blocks, self.goombas, self.koopas, self.mario, self.ug_coins, self.stats,
-                                   self.sound_library)
+                self.gF.check_time(self.blocks, self.bricks, self.goombas, self.koopas, self.mario, self.ug_coins,
+                                   self.stats, self.sound_library)
                 self.clock.tick(self.settings.FPS)                                     # Locks game at designated FPS
 
     def update_menu_screen(self, mloop):
@@ -183,6 +184,7 @@ class Main:
         self.ug_hugepipes = self.gF.load_hugepipe_obj(self.image_library[11], self.ugmap.hugepipe_rect, self.screen,
                                                       self.settings)
         self.ug_coins = self.gF.load_coin_objs(self.image_library[7], self.ugmap.coin_rect, self.screen, self.settings)
+
 
 if __name__ == '__main__':
     game = Main()
